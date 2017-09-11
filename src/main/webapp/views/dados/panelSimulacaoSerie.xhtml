@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/templatePaginaGrafico.xhtml" >
+	
+	<ui:define name="barraEsquerdaVistaBacia">
+		<h:head>
+			<h3>Resultados Simulação Serie</h3>
+			<br />
+		</h:head>
+		<h:body>
+			<h:form id="panelForm">
+				<h:panelGrid id="panelSimulacao">
+					<p:outputLabel value="Bacia " />
+	   				<p:selectOneMenu id="umaBacia" value="#{panelSimulacaoSerieController.bacia}" >
+	               		<f:converter binding="#{baciaConverter}" />
+	               		<f:selectItems value="#{panelSimulacaoSerieController.bacias}" var="bacia" itemLabel="#{bacia.nome}" itemValue="#{bacia}" />
+	               		<p:ajax update="umaEstacao" />
+	           		</p:selectOneMenu>
+	           		<p:outputLabel value="Estação de Referência " />
+	           		<p:selectOneMenu id="umaEstacao" value="#{panelSimulacaoSerieController.estacaoAtual}"  style="width: 120px;" >
+	               		<f:converter binding="#{estacaoConverter}" />
+	               		<f:selectItems value="#{panelSimulacaoSerieController.estacoes}" var="estacao" itemLabel="#{estacao.nome}" itemValue="#{estacao}" />
+	           		</p:selectOneMenu>
+	           		<p:outputLabel value="Grade da Serie Previsão " />
+	   				<h:inputText value="#{panelSimulacaoSerieController.seriePrevisao.grade.nome}" disabled="true"></h:inputText>
+	           		<p:outputLabel value="Data Inicial " />
+	           		<p:calendar value="#{panelSimulacaoSerieController.seriePrevisao.dataInicio}" id="popupDataInicial" size="12" disabled="true"/>
+	           		<p:outputLabel value="Data Final " />
+	           		<p:calendar value="#{panelSimulacaoSerieController.seriePrevisao.dataFim}" id="popupDataFinal" size="12" disabled="true" />
+	           		<p:outputLabel value="Unidade Tempo " />
+	           		<p:selectOneMenu id ="tempo" value="#{panelSimulacaoSerieController.unidadeTempo}" disabled="true" >
+						<f:selectItems value="#{panelSimulacaoSerieController.seriePrevisao.grade.unidadesTempoSimulacao}" var="unidade" itemLabel="#{unidade.descricao}" itemValue="#{unidade}" />
+					</p:selectOneMenu>
+					<p:commandButton id="panelButton" value="Atualizar" action="#{panelSimulacaoSerieController.atualizarPanel}" ajax="false" />
+					<p:messages id="messages" autoUpdate="true" globalOnly="true" />
+	           	</h:panelGrid>	
+			</h:form>
+			
+			
+		</h:body>
+	</ui:define>
+	
+	<ui:define name="contentGraficoView">
+		<h:head>
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		
+		<!-- ********************************** Chuvas ********************************************************* -->
+		
+		<script type="text/javascript">
+      		google.load('visualization', '1.1', {packages: ['corechart', 'controls']});
+    	</script>
+    	
+			<script type="text/javascript" src="${facesContext.externalContext.requestContextPath}/js/relogioContador.js" />
+			<script type="text/javascript"> /*<![CDATA[*/
+				
+			function start() {  
+				 PF('statusDialog').show();  
+			}  
+			  
+			function stop() {  
+				 PF('statusDialog').hide();  
+			} 
+	        
+		    google.setOnLoadCallback(drawChartComparativoNivel);
+		    
+
+		    function drawChartComparativoNivel() {
+				
+				var data = new google.visualization.DataTable();
+			    
+				data.addColumn('datetime', 'Data');
+
+			    data.addColumn('number', 'Nivel da Estação(mts)');
+			    
+			    var arrayEstacao = #{panelSimulacaoSerieController.dadosNivelEstacao};
+			    
+			    for(i in arrayEstacao){
+			    	var dateEstacao = new Date(arrayEstacao[i].data);
+			    	data.addRow([dateEstacao, arrayEstacao[i].nivel]);
+			    }
+			 	    
+			    var data2 = new google.visualization.DataTable();
+			    
+			    data2.addColumn('datetime', 'Data');
+			    
+			    data2.addColumn('number', 'Nivel do RAS(mts)');
+			    
+			    var arrayRAS = #{panelSimulacaoSerieController.dadosNivelSim};
+			    
+			    for(i in arrayRAS){
+			    	var dateRas = new Date(arrayRAS[i].data);
+			    	data2.addRow([dateRas, arrayRAS[i].nivel]);
+			    }
+			    
+			    var maximoNivel = #{panelSimulacaoSerieController.maximoNivel};
+			    var minimoNivel = #{panelSimulacaoSerieController.minimoNivel};
+			    
+			    var maximoNivelRas = #{panelSimulacaoSerieController.maximoNivelRas};
+			    var minimoNivelRas = #{panelSimulacaoSerieController.minimoNivelRas};
+			    
+			    if (maximoNivel < maximoNivelRas){
+			    	maximoNivel = maximoNivelRas;
+			    } 
+			    
+			    if (minimoNivel > minimoNivelRas){
+			    	minimoNivel = minimoNivelRas;
+			    }
+				
+				// Pode ser igual que caso de que a serie tenha um so valor
+				if (minimoNivel == maximoNivel){
+					minimoNivel = maximoNivel - 1;
+					maximoNivel = maximoNivel + 1;
+				}else{
+					// Se aparecem valores faltantes eles terãm o valor -901, então na grafica mostrar -1
+					if(minimoNivel < -1){
+			        	minimoNivel = -10;
+			        }else{
+			        	minimoNivel = minimoNivel - (Math.abs( maximoNivel - minimoNivel ) * 0.20);
+			        }
+					
+					if (maximoNivel > 0){
+						maximoNivel = maximoNivel +( Math.abs(maximoNivel - minimoNivel ) * 0.20);
+					}else{
+						maximoNivel = maximoNivel + 1;
+					}	
+				}
+				
+				var joinedData = google.visualization.data.join(data, data2, 'full', [[0, 0]], [1], [1]);
+			    
+			    var chart = new google.visualization.LineChart(document.querySelector('#chart_comparativo'));
+			    
+			    
+			    var options = {
+ 		          legend: {'position':'top'},
+ 		          height: 400,
+ 		          width: 1100,
+ 		          chartArea:{left:40, width:"95%" },
+ 		          series: {0:{'color': 'blue'}, 1:{'color': 'red'}},
+ 		          hAxis: {format: 'dd/MM HH:mm', 'textStyle':{'fontSize':10}},
+ 		          vAxis: {'textStyle':{'fontSize':10}, 'gridlines':{count:10}, 'viewWindow': {'min': minimoNivel, 'max': maximoNivel}}, 
+ 		          interpolateNulls: true
+			    };
+			    
+			    chart.draw(joinedData, options);
+		    }
+				
+				/*]]>*/</script>
+		</h:head>
+		<h:body>
+			
+			<h:panelGroup>
+				<div id="chart_comparativo" style="width: 90%; height: 400px;" />
+				<b>
+				<i>
+				<h:outputText value="Grafico comparativo entre valores de nivel observado na estação #{panelSimulacaoSerieController.estacaoAtual.nome} e o resultado do RAS para a seção mais proxima da estação"></h:outputText>
+				</i>
+				</b>
+			</h:panelGroup>
+	    
+	    </h:body>
+    
+    </ui:define>
+    
+</ui:composition>

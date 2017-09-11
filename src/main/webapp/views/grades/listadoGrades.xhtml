@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template.xhtml">
+	<ui:define name="content">
+		<h:head>
+	        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	        <title>Administração de Grades</title>
+	    </h:head>
+		<h:body>
+			<h2>Administração de Grades</h2>
+			<h:panelGrid columns="3" align="left">
+				<h:form id="adicionarGradeForm">
+					<p:commandButton  value="Adicionar" action="#{gradeController.adicionarGrade}" />
+				</h:form>
+			</h:panelGrid>
+			
+			<h:form>
+			<p:dataTable id="gradeTable" border="1" cellpadding="1" cellspacing="1"  value="#{gradeController.grades}" var="grade" 
+			             paginator="true" rows="15" style="width:85%;" paginatorPosition="top"
+			             emptyMessage="Não tem grades que coincidam com esse critério" filteredValue="#{gradeController.grades}" widgetVar="gradesTable" > 
+				
+				<p:column id="nome" headerText="Nome" sortBy="nome" filterBy="nome" filterMatchMode="contains">
+					<h:outputText value="#{grade.nome}"/>
+				</p:column>
+				<p:column id="latInicial" headerText="Latitide Inicial">
+					<h:outputText value="#{grade.latitudeInicial}"/>
+				</p:column>
+				<p:column id="longInicial" headerText="Longiude Inicial">
+					<h:outputText value="#{grade.longitudeInicial}"/>
+				</p:column>
+				<p:column id="varPasso" headerText="Variavel Passo">
+					<h:outputText value="#{grade.passo}"/>
+				</p:column>
+				<p:column id="pathRemoto" headerText="Path remoto FTP">
+					<h:outputText value="#{grade.remotePathFtp}"/>
+				</p:column>
+				<p:column id="pontosLat" headerText="Pontos Latitude">
+					<h:outputText value="#{grade.numeroPontosLatitude}"/>
+				</p:column>
+				<p:column id="pontosLong" headerText="Pontos Longitude" >
+					<h:outputText value="#{grade.numeroPontosLongitude}"/>
+				</p:column>
+				<p:column id="tempo" headerText="Tempo">
+					<h:outputText value="#{grade.quantidadeTempoPeriodo}"/>
+				</p:column>
+				<p:column id="unidadeTempo" headerText="Unidade Tempo">
+					<h:outputText value="#{grade.unidadeTempoDescricao}"/>
+				</p:column>
+				<p:column id="ativa" headerText="Ativa" >
+					<h:outputText value="#{grade.buscaAtiva}"/>
+				</p:column>
+                
+                <p:column>
+	                <p:commandLink id="modificarGrade" action="modificarGrade" >
+						<h:outputText value="Modificar" />
+	                    <f:setPropertyActionListener value="#{grade}" target="#{gradeController.grade}" />
+	                </p:commandLink>
+            	</p:column>
+            	
+            	<p:column>
+	                <p:commandLink id="eliminarGrade" action="#{gradeController.excluirGrade}" ajax="false" >
+						<h:outputText value="Eliminar" />
+	                    <f:setPropertyActionListener value="#{grade}" target="#{gradeController.grade}" />
+	                </p:commandLink>
+            	</p:column>
+			</p:dataTable>
+			</h:form>
+		</h:body>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:task="http://www.springframework.org/schema/task"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	                       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	                       http://www.springframework.org/schema/tx 
+	                       http://www.springframework.org/schema/tx/spring-tx.xsd
+	                       http://www.springframework.org/schema/context 
+	                       http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+	                       http://www.springframework.org/schema/task  
+	                       http://www.springframework.org/schema/task/spring-task-3.0.xsd
+	                       http://www.springframework.org/schema/aop 
+	                       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"> 
+	                       
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<context:component-scan base-package="com.ufpe.redeclima" />
+	
+	<!-- Ativa o scanning de tarefas programadas -->
+	<task:annotation-driven/>
+	
+	<!-- Ativa o scanning de aspectos -->
+	<aop:aspectj-autoproxy  proxy-target-class="true" />
+	
+	<!-- Configuracao de security do spring -->
+	<import resource="spring-security.xml"/>
+	
+	<!-- Configuracao de BD -->
+	<import resource="db.xml" />
+	
+	<!-- Configuracao de Spring Batch -->
+	<import resource="spring-batch.xml" />
+	
+	<!-- Configuração de e-mail -->
+	<import resource="spring-mail.xml" />
+	
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+     	<property name="defaultLocale" value="en_US" />
+ 	</bean>
+	
+	
+	
+</beans>

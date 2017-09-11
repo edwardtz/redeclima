@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template.xhtml">
+	<ui:define name="content">
+		
+		<h:form id="gradeForm">
+    	<center>
+    			<h2>Administração de Grades</h2>
+    			
+    			<h:panelGrid columns="3">				
+    			
+    				<h:outputLabel value="Nome * " />
+    				<h:inputText id="nome" value="#{gradeController.grade.nome}" required="true" />
+    				<h:message for="nome" styleClass="errorMessage" showDetail="true" />
+    				
+    				<h:outputLabel value="TipoGrade * " />
+            		<p:selectOneMenu id="umaGrade" value="#{gradeController.grade.tipoGrade}" required="true" >
+                		<f:selectItems value="#{gradeController.tiposGrade}" var="tipo" itemLabel="#{tipo.descricao}" itemValue="#{tipo.id}" />
+            		</p:selectOneMenu>
+            		<h:message for="umaGrade" styleClass="errorMessage" />
+    				
+    				<h:outputLabel value="Latitude Inicial * " />
+    				<h:inputText id="latitudeInicial" value="#{gradeController.grade.latitudeInicial}" required="true" />
+    				<h:message for="latitudeInicial" styleClass="errorMessage" />
+    				
+    				<h:outputLabel value="Longitude Inicial * " />
+    				<h:inputText id="longitudeInicial" value="#{gradeController.grade.longitudeInicial}" required="true" />
+    				<h:message for="longitudeInicial" styleClass="errorMessage" />
+    				
+    				<h:outputLabel value="Variavel de Passo * " />
+    				<h:inputText id="passo" value="#{gradeController.grade.passo}" required="true" />
+    				<h:message for="passo" styleClass="errorMessage" />
+    				
+    				<h:outputLabel value="Path remoto FTP * " />
+    				<h:inputText id="remotePathFtp" value="#{gradeController.grade.remotePathFtp}" required="true" />
+    				<h:message for="remotePathFtp" styleClass="errorMessage" />
+    				
+    				<h:outputLabel value="Numero de pontos latitude * " />
+    				<h:inputText id="pontosLatitude" value="#{gradeController.grade.numeroPontosLatitude}" required="true" />
+    				<h:message for="pontosLatitude" styleClass="errorMessage" />
+    				
+    				<h:outputLabel value="Numero de pontos longitude * " />
+    				<h:inputText id="pontosLongitude" value="#{gradeController.grade.numeroPontosLongitude}" required="true" />
+    				<h:message for="pontosLongitude" styleClass="errorMessage" />
+    				
+	    			<h:outputLabel value="Periodo Atualização * " />
+	    			<h:panelGrid columns="2" >
+	    				<h:inputText id="periodoAtualizacao" value="#{gradeController.grade.quantidadeTempoPeriodo}" required="true" />
+	            		<p:selectOneMenu id="umaUnidade" value="#{gradeController.grade.unidadeTempoPeriodo}" required="true" >
+	                		<f:selectItems value="#{gradeController.unidadesTempo}" var="unidade" itemLabel="#{unidade.descricao}" itemValue="#{unidade.id}" />
+	            		</p:selectOneMenu>
+    				</h:panelGrid>
+    				<h:message for="periodoAtualizacao" styleClass="errorMessage" />
+    				
+            		<h:outputLabel value="Ativada " />
+					<h:selectBooleanCheckbox id="ativada" value="#{gradeController.grade.buscaAtiva}" />
+					<h:message for="ativada" styleClass="errorMessage" />
+					
+					<h:outputLabel value="Areas " />
+					<p:pickList id="areaRecorteList" value="#{gradeController.areasRecorte}" var="areaRecorte"   
+                                itemValue="#{areaRecorte}" itemLabel="#{areaRecorte.nome}"  converter="#{areaRecorteConverter}"
+                                showSourceControls="true" showTargetControls="true" showCheckbox="false"  
+                                showSourceFilter="false" showTargetFilter="false" filterMatchMode="contains" >
+                    
+                    	<f:facet name="sourceCaption">Areas Disponiveis</f:facet>  
+        				<f:facet name="targetCaption">Areas Associadas</f:facet>
+        				 
+                    </p:pickList>
+					<h:message for="areaRecorteList" styleClass="errorMessage" />
+            		
+    			</h:panelGrid>
+    			
+    			<br />
+    			
+    			<p:commandButton value="Gravar" action="#{gradeController.save}" />
+    			<p:commandButton value="Limpar" type="reset" />
+    			<p:commandButton value="Cancelar" action="cancelAdicionarGrade" immediate="true" />
+    				 
+		</center>
+    </h:form>
+	<a href="../../home.jsf">Menu Principal</a>	
+	<br />
+	<br />
+	</ui:define>
+</ui:composition>

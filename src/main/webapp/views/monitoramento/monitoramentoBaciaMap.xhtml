@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/templateBaciaView.xhtml" >
+	
+	<ui:define name="barraEsquerdaVistaBacia">
+		<h:head>
+			<script type="text/javascript">  
+				function start() {  
+					 PF('statusDialog').show();  
+				}  
+				  
+				function stop() {  
+					 PF('statusDialog').hide();  
+				}  
+				
+			</script>
+			<h3>Simulação Manual</h3>
+		</h:head>
+		<h:body>
+			
+			<p:dialog modal="true" widgetVar="statusDialog" header="Atualizando a grade ..." draggable="false"  closable="false" resizable="false">  
+			    <p:graphicImage value="/resources/images/ajaxloadingbar.gif" />  
+			</p:dialog> 
+			
+			<h:form id="execucaoSimulacao">
+				<h:panelGrid id="panelSimulacao">
+					<h:outputLabel value="Bacia " />
+	   				<p:selectOneMenu id="umaBacia" value="#{monitoramentoBaciaMapController.simDto.bacia}" >
+	               		<f:converter binding="#{baciaConverter}" />
+	               		<f:selectItems value="#{monitoramentoBaciaMapController.bacias}" var="bacia" itemLabel="#{bacia.nome}" itemValue="#{bacia}" />
+	           		</p:selectOneMenu>
+	           		<h:outputText value="Dados: " />  
+			        <p:selectOneRadio id="options" value="#{monitoramentoBaciaMapController.tipoDados}">  
+			            <f:selectItems value="#{monitoramentoBaciaMapController.tiposDados}" var="tipo" itemLabel="#{tipo.descripcao}" itemValue="#{tipo}" />
+			            <p:ajax listener="#{monitoramentoBaciaMapController.mudouTipo}" update="panelPrevisaoId, :formHistorico" />
+			        </p:selectOneRadio>  
+					
+					<p:outputPanel id="panelPrevisaoId">
+						<p:outputPanel rendered="#{monitoramentoBaciaMapController.tipoDados.id == 1}">
+						
+						<h:outputLabel value="Dados de Previsão " />
+		   				<p:selectOneMenu id="umaGrade" value="#{monitoramentoBaciaMapController.simDto.grade}" >
+		               		<f:converter binding="#{gradeConverter}" />
+		               		<f:selectItems value="#{monitoramentoBaciaMapController.grades}" var="grade" itemLabel="#{grade.nome}" itemValue="#{grade}" />
+		           		</p:selectOneMenu>
+		           		<h:panelGrid columns="2">
+		           		<h:outputLabel value="Mostrar Grade?:" for="mostrarGradeCheck"/>
+						<h:selectBooleanCheckbox id="mostrarGradeCheck" value="#{monitoramentoBaciaMapController.mostrarGrade}"  onchange="start()" >  
+				            <f:ajax listener="#{monitoramentoBaciaMapController.mostrarOcultarGrade}" render=":vistaBaciaForm:mapaBacias" />  
+				        </h:selectBooleanCheckbox>
+				        
+						</h:panelGrid>
+						
+						</p:outputPanel>
+					</p:outputPanel>
+					
+					<h:outputLabel value="Data Inicial " />
+	           		<p:calendar value="#{monitoramentoBaciaMapController.simDto.dataInicial}" id="popupDataInicial" size="12" />
+	           		<h:outputLabel value="Data Final " />
+	           		<p:calendar value="#{monitoramentoBaciaMapController.simDto.dataFinal}" id="popupDataFinal" size="12" />
+	           		<h:outputLabel value="Unidade Tempo " />
+	           		<h:selectOneMenu id ="tempo" value="#{monitoramentoBaciaMapController.simDto.unidade}">
+						<f:selectItems value="#{monitoramentoBaciaMapController.simDto.grade.unidadesTempoSimulacao}" var="unidade" itemLabel="#{unidade.descricao}" itemValue="#{unidade}" />
+					</h:selectOneMenu>
+	           		<h:panelGrid columns="2">
+	           		<h:outputLabel value="Contínua" for="usarProcessamentoContinuo"/>
+					<h:selectBooleanCheckbox id="usarProcessamentoContinuo" value="#{monitoramentoBaciaMapController.simDto.continua}"/>
+					</h:panelGrid>
+					<p:commandButton id="simulacaoButton" value="Simular" action="#{monitoramentoBaciaMapController.executarSimulacao}" onstart="pbAjax.start()" update=":formHistorico:simulacoes" />
+	           		<p:progressBar id="progressBar" widgetVar="pbAjax" ajax="true" value="#{monitoramentoBaciaMapController.estadoSimulacao.progress}" interval="3000" labelTemplate="{value}%" update=":vistaBaciaForm:mapaBacias" >
+	        			<p:ajax event="complete" listener="#{monitoramentoBaciaMapController.atualizarDados}" update=":vistaBaciaForm:mapaBacias,:logPanel" />   
+	     			</p:progressBar>
+					<p:messages id="messages" autoUpdate="true" globalOnly="true" />
+	           	</h:panelGrid>	
+			</h:form>
+			
+			<h:form id="formHistorico">
+				<p:dataList id="simulacoes" value="#{monitoramentoBaciaMapController.simulacoesHistorial}" var="simulacao" paginator="true" rows="5"  
+			       currentPageReportTemplate="Pag {currentPage} de {totalPages}" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}" paginatorPosition="top" type="none">  
+			  
+			            <f:facet name="header">  
+			                Simulações Executadas pelo Usuário
+			            </f:facet>  
+			  
+			            <p:commandLink value="#{simulacao.bacia.nome} - #{simulacao.grade.nome}" update=":execucaoSimulacao:panelSimulacao,:vistaBaciaForm:mapaBacias,:logPanel" action="#{monitoramentoBaciaMapController.selecionarHistorico}" style="margin-left:10px">  
+					        <f:setPropertyActionListener value="#{simulacao}" target="#{monitoramentoBaciaMapController.simulacaoSelected}" />
+					    </p:commandLink>
+					    <br />
+			            <h:outputText value="#{simulacao.dataInicial}" style="margin-left:10px" >
+			            	<f:convertDateTime pattern="dd/MM/yy - " />
+			            </h:outputText>
+			            <h:outputText value="#{simulacao.dataFinal}" style="margin-right:10px"  >
+			            	<f:convertDateTime pattern="dd/MM/yy" />
+			            </h:outputText>
+			            <p:commandLink value="[Apagar]" action="#{monitoramentoBaciaMapController.apagarSimulacao}" title="Apagar Simulação" update="simulacoes" >  
+			                <f:setPropertyActionListener value="#{simulacao}" target="#{monitoramentoBaciaMapController.simulacaoSelected}" />  
+			                <p:confirm header="Confirmação de Apagado" message="Esta seguro que quer apagar os resultados da simulação?" icon="ui-icon-alert" />  
+			            </p:commandLink>
+			            <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">  
+					        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />  
+					        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+					    </p:confirmDialog> 
+					    <br />
+			    </p:dataList> 
+			    
+			</h:form>
+		</h:body>
+	</ui:define>
+	
+	<ui:define name="contentBaciaView">
+		<h:head>
+			<script type="text/javascript" src="${facesContext.externalContext.requestContextPath}/js/relogioContador.js" />
+			<script type="text/javascript"> /*<![CDATA[*/
+				function doPopup(source, idEstacao) {  
+			        popup = window.open('chartMonitoramentoEstacao.jsf?estacaoId='+idEstacao, '' , 'height='+screen.availHeight/2+',width='+screen.availWidth/2 +',toolbar=no,menubar=no,scrollbars=yes,location=no,directories=0');  
+			        popup.openerFormId = source.form.id;  
+			        popup.focus();  
+				}
+			
+				function doPopupFTP(source, idEstacao) {  
+			        popup = window.open('chartMonitoramentoEstacaoFTP.jsf?estacaoId='+idEstacao, '' , 'height='+screen.availHeight/2+',width='+screen.availWidth/2 +',toolbar=no,menubar=no,scrollbars=yes,location=no,directories=0');  
+			        popup.openerFormId = source.form.id;  
+			        popup.focus();  
+				}
+				
+				function doPopupPrevisao(source, pontoGradeId) {  
+			        popup = window.open('chartPrevisaoGradePonto.jsf?pontoGradeId='+pontoGradeId, '' , 'height='+screen.availHeight/2+',width='+screen.availWidth/2 +',toolbar=no,menubar=no,scrollbars=yes,location=no,directories=0');  
+			        popup.openerFormId = source.form.id;  
+			        popup.focus();  
+				}
+				
+				function doExportarDadosSeries(source, pontoGradeId) {  
+			        popup = window.open('exportacaoPrevisao.jsf?pontoGradeId='+pontoGradeId, '' , 'height='+screen.availHeight/2+',width='+screen.availWidth/2 +',toolbar=no,menubar=no,scrollbars=yes,location=no,directories=0');  
+			        popup.openerFormId = source.form.id;  
+			        popup.focus();  
+				}
+				
+				function doPopupSimulacao(source, idUsuario, idBacia, idGrade, dataInicio, dataFim, idSecao, nomeRio, nomeTrecho, tipoDado) {  
+					popup = window.open('chartSecaoSimulacao.jsf?usuarioId='+idUsuario+'&baciaId='+idBacia+'&gradeId='+idGrade+'&dataInicio='+dataInicio+'&dataFim='+dataFim+'&secaoId='+idSecao+'&nomeRio='+nomeRio+'&nomeTrecho='+nomeTrecho+'&tipoDado='+tipoDado, '' , 'height='+screen.availHeight/2+',width='+screen.availWidth/2 +',toolbar=no,menubar=no,scrollbars=yes,location=no,directories=0');  
+					popup.opener = source;
+					popup.focus(); 
+			    }
+				
+				/*]]>*/</script>
+				<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+		</h:head>
+		<h:body>
+			#{monitoramentoBaciaMapController.atualizarDados}
+			<h:form id="vistaBaciaForm" target="_blank" >
+				
+				<p:remoteCommand name="updateMap" action="#{monitoramentoBaciaMapController.atualizarDados}" update="mapaBacias" process="@this mapaBacias" partialSubmit="true" />
+				<p:remoteCommand name="scriptSecao" action="#{monitoramentoBaciaMapController.mostrarResultados}" />
+				
+				<p:gmap id="mapaBacias" center="#{monitoramentoBaciaMapController.centerY} , #{monitoramentoBaciaMapController.centerX}" zoom="#{monitoramentoBaciaMapController.zoom}" type="TERRAIN" style="width:100%;height:600px" 
+				         model="#{monitoramentoBaciaMapController.simpleModel}" >
+					<p:ajax event="overlaySelect" listener="#{monitoramentoBaciaMapController.onMarkerSelect}"  oncomplete="scriptSecao()" />
+					
+					<p:gmapInfoWindow rendered="#{!monitoramentoBaciaMapController.isTipoSecao}">  
+				        <p:outputPanel style="text-align:left;display:block;margin:auto:" rendered="#{monitoramentoBaciaMapController.isTipoEstacao}" >  
+				                <h:outputText value="Estação: #{monitoramentoBaciaMapController.markerSelected.title}"  />
+				                <br />
+				                <h:outputText value="Código: #{monitoramentoBaciaMapController.markerSelected.data.codigo}" />
+				                <br />
+				                <h:outputText value="Longitude: #{monitoramentoBaciaMapController.markerSelected.data.longitude}" >
+				                	<f:convertNumber type="number" locale="en" pattern="#0.00000" maxFractionalDigits ="2" />
+				                </h:outputText>
+				                <br />
+				                <h:outputText value="Latitude: #{monitoramentoBaciaMapController.markerSelected.data.latitude}" >
+				                	<f:convertNumber type="number" locale="en" pattern="#0.00000" />
+				                </h:outputText>
+				                <br />
+				                <h:outputText value="Responsável: #{monitoramentoBaciaMapController.markerSelected.data.responsavel}" />
+				                <br />
+				                <h:outputText value="Ultima data atualização: #{monitoramentoBaciaMapController.markerSelected.data.dataAtualizacaoEstado}" />
+								<br />
+								<p:commandLink onclick="doPopup(this, '#{monitoramentoBaciaMapController.markerSelected.data.id}');" value="Mostrar Dados Observados" />
+								<br />
+								<p:commandLink onclick="doPopupFTP(this, '#{monitoramentoBaciaMapController.markerSelected.data.id}');return false;" value="Mostrar Dados Observados FTP" />				
+				        </p:outputPanel> 
+				        
+				    	<p:outputPanel style="text-align:left;display:block;margin:auto:" rendered="#{monitoramentoBaciaMapController.isTipoPontoGrade}" >
+				    		<h:outputText value="Ponto de Grade: #{monitoramentoBaciaMapController.markerSelected.title} " />
+			        		<br />
+			        		<h:outputText value="ID: #{monitoramentoBaciaMapController.markerSelected.data.id} " />
+			        		<br />
+			                <h:outputText value="Longitude: #{monitoramentoBaciaMapController.markerSelected.data.longitude}" />
+			                <br />
+			                <h:outputText value="Latitude: #{monitoramentoBaciaMapController.markerSelected.data.latitude}" />
+			                <br />
+							<p:commandLink onclick="doPopupPrevisao(this, '#{monitoramentoBaciaMapController.markerSelected.data.id}', '#{monitoramentoBaciaMapController.markerSelected.data.id}');return false;" value="Mostrar Dados Previsão" />
+				    		<br />
+							<p:commandLink onclick="doExportarDadosSeries(this, '#{monitoramentoBaciaMapController.markerSelected.data.id}', '#{monitoramentoBaciaMapController.markerSelected.data.id}');return false;" value="Exportar dados Series" />
+				    	</p:outputPanel>
+				    	
+				    </p:gmapInfoWindow> 
+				    
+				</p:gmap>
+				
+			</h:form>
+			
+			<div id='timer' align="right" />
+	           	
+	        <script type="text/javascript">window.onload = CreateTimer("timer", 600);</script>
+	        
+	    </h:body>
+    
+    </ui:define>
+    
+    <ui:define name="logView">
+        <h:body>
+	    	<p:accordionPanel id="logPanel" multiple="true" style="text-align:left; width: 100%;" activeIndex="-1" >  
+			    <p:tab title="Log do Simulador" >  
+			            <h:outputText value="#{monitoramentoBaciaMapController.log}"  escape="false"  />
+			    </p:tab>  
+			</p:accordionPanel>
+		</h:body>
+    </ui:define>
+    
+</ui:composition>

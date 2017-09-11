@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template.xhtml">
+	<ui:define name="content">
+		
+		<h:body>
+		<h:form id="formBacia" enctype="multipart/form-data" method="post" >
+			<center>
+			<h2>Administração de Bacias</h2>
+			<h:panelGrid columns="3" >
+			
+				<h:outputLabel value="Nome " />
+				<h:inputText id="baciaNome" value="#{baciaController.bacia.nome}"  required="true" />
+				<h:message for="baciaNome" styleClass="errorMessage" />
+				
+				<h:outputLabel value="Longitude X1 " />
+				<h:inputText id="baciaX1" value="#{baciaController.bacia.longitudeX1}"  required="true" >
+					<f:convertNumber type="number" locale="en" />
+				</h:inputText>
+				<h:message for="baciaX1" styleClass="errorMessage" />
+								
+				<h:outputLabel value="Latitude Y1 " />
+				<h:inputText id="baciaY1" value="#{baciaController.bacia.latitudeY1}"  required="true" >
+					<f:convertNumber type="number" locale="en" />
+				</h:inputText>
+				<h:message for="baciaY1" styleClass="errorMessage" />
+				
+				<h:outputLabel value="Longitude X2 " />
+				<h:inputText id="baciaX2" value="#{baciaController.bacia.longitudeX2}"  required="true" >
+					<f:convertNumber type="number" locale="en" />
+				</h:inputText>
+				<h:message for="baciaX2" styleClass="errorMessage" />
+
+				<h:outputLabel value="Latitude Y2 " />
+				<h:inputText id="baciaY2" value="#{baciaController.bacia.latitudeY2}"  required="true">
+					<f:convertNumber type="number" locale="en" />
+				</h:inputText>
+				<h:message for="baciaY2" styleClass="errorMessage" />
+				
+				<h:outputText value=" " rendered="#{!baciaController.bacia.isAllConfig}"/>
+				<h:outputText value="Atenção: Configuração esta incompleta" rendered="#{(!baciaController.bacia.isAllConfig) and (baciaController.bacia.id != null) }" style="color: red" />
+				<h:outputText value=" " rendered="#{!baciaController.bacia.isAllConfig}"/>
+				
+				<h:outputLabel value=" " />
+				<p:commandLink id="commandLinkId" action="configuracaoBacias" value="Modificar Configuração dos Modelos" rendered="#{baciaController.bacia.id!=null}" />
+				
+				
+			</h:panelGrid>
+			
+			<br />
+			<p:commandButton action="#{baciaController.save}" value="Gravar" rendered="#{baciaController.bacia.id!=null}" />
+			<p:commandButton action="#{baciaController.saveAndContinue}" value="Continuar" rendered="#{baciaController.bacia.id==null}"/>
+			<p:commandButton value="Limpar" type="reset" />
+	    	<p:commandButton value="Cancelar" action="cancelAdicionarBacia" immediate="true" />
+			
+			</center>
+		</h:form>
+	
+		</h:body>
+		
+	</ui:define>
+</ui:composition>

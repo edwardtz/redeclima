@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template.xhtml">
+	<ui:define name="content">
+		<h:head>
+	        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	        <title>Documentação do Sistema</title>
+	    <script type="text/javascript">  
+			function start() {  
+				 PF('statusDialog').show();  
+			}  
+			  
+			function stop() {  
+				 PF('statusDialog').hide();  
+			}  
+			
+		</script> 
+	    </h:head>
+	    
+		<h:body>
+			
+			<h2>Documentos</h2>
+			
+			<h:panelGrid columns="3" align="left">
+				<h:form id="adicionarDocumentoForm">
+					<p:commandButton  value="Adicionar" action="#{documentacaoController.adicionarDocumento}" />
+				</h:form>
+				
+			</h:panelGrid>
+			
+			<p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">  
+			    <p:graphicImage value="/resources/images/ajaxloadingbar.gif" />  
+			</p:dialog> 
+			
+			<h:form id="documentosForm">
+			<p:dataTable id="documentosTable" border="1" cellpadding="1" cellspacing="1"  value="#{documentacaoController.documentos}" var="doc" style="width:70%;" 
+			             paginator="true" rows="15" paginatorPosition="top" >
+				<p:column sortBy="nome" headerText="Nome" style="text-align: center;">
+					<p:commandLink value="#{doc.nome}" id="atualizarDocument" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)">
+	                    <f:setPropertyActionListener value="#{doc}" target="#{documentacaoController.documento}" />
+	                	<p:fileDownload value="#{documentacaoController.fileDoc}" />
+	                </p:commandLink>
+				</p:column>
+				<p:column sortBy="dataAtualizacao" headerText="Atualizado" style="text-align: center;" >
+					<h:outputText value="#{doc.dataAtualizacao}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-03:00" />
+					</h:outputText>
+				</p:column>
+				<p:column  sortBy="versao" headerText="Versão" style="text-align: center;">
+					<h:outputText value="v#{doc.versao}"/>
+				</p:column>
+				<p:column  headerText="Descrição" style="text-align: center;">
+					<h:outputText value="#{doc.descricao}"/>
+				</p:column>
+				<p:column style="text-align: center;">
+	                <p:commandLink value="Atualizar" id="atualizarDoc" ajax="false" action="atualizardoc" >
+	                    <f:setPropertyActionListener value="#{doc}" target="#{documentacaoController.documento}" />
+	                </p:commandLink>
+            	</p:column>
+            	<p:column style="text-align: center;">
+	            	<h:commandLink value="Apagar" id="apagarDoc" action="#{documentacaoController.apagar}" >
+	                    <f:setPropertyActionListener value="#{doc}" target="#{documentacaoController.documento}" />
+	                </h:commandLink>
+            	</p:column>
+			</p:dataTable>
+			</h:form>
+			
+		</h:body>
+	</ui:define>
+</ui:composition>

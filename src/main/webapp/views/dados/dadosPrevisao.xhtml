@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template.xhtml">
+	<ui:define name="content">
+		<h:head>
+	        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	        <title>Series de Dados de Previsão</title>
+	    <script type="text/javascript">  
+			function start() {  
+				 PF('statusDialog').show();  
+			}  
+			  
+			function stop() {  
+				 PF('statusDialog').hide();  
+			}  
+			
+		</script> 
+	    </h:head>
+	    
+		<h:body>
+			
+			<h2>Series de Dados de Previsão</h2>
+			<h:form id="gradeForm">
+				<h:panelGrid columns="3" align="left">
+					<h:outputText value="Dados de Previsão " />
+					<p:selectOneMenu id="umaGrade" value="#{dadosPrevisaoController.gradeSelected}" size="100px" >
+		               		<f:selectItems value="#{dadosPrevisaoController.grades}" var="grade" itemLabel="#{grade.nome}" itemValue="#{grade}" />
+		           	</p:selectOneMenu>
+				</h:panelGrid>
+			</h:form>
+			
+			<p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">  
+			    <p:graphicImage value="/resources/images/ajaxloadingbar.gif" />  
+			</p:dialog> 
+			
+			<h:form id="exportarDadosForm">
+			<p:dataTable id="dadosSeriesTable" border="1" cellpadding="1" cellspacing="1"  value="#{dadosPrevisaoController.series}" var="serie" style="width:70%;" 
+			             paginator="true" rows="15" paginatorPosition="top" >
+				<p:column sortBy="dataRodada" headerText="Data de Rodada" style="text-align: center;">
+					<h:outputText value="#{serie.dataRodada}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-03:00" />	
+					</h:outputText>
+				</p:column>
+				<p:column sortBy="dataInicio" headerText="Data Inicio Previssão" style="text-align: center;" >
+					<h:outputText value="#{serie.dataInicio}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-03:00" />
+					</h:outputText>
+				</p:column>
+				<p:column  sortBy="dataFim" headerText="Data Fim Previssão" style="text-align: center;">
+					<h:outputText value="#{serie.dataFim}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-03:00" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Datos Previsão" style="text-align: center;">
+	                <p:commandLink value="Exportar Dados" id="exportarDados" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)">
+	                    <f:setPropertyActionListener value="#{serie}" target="#{dadosPrevisaoController.serieSelected}" />
+	                	<p:fileDownload value="#{dadosPrevisaoController.file}" />
+	                </p:commandLink>
+            	</p:column>
+            	<p:column headerText="Resultados RAS" style="text-align: center;">
+	            	<h:commandLink value="Mostrar" id="mostrarResultados"  action="verSimulacaoSerie"  target="_blank" >
+	                    <f:setPropertyActionListener value="#{serie}" target="#{panelSimulacaoSerieController.seriePrevisao}" />
+	                </h:commandLink>
+            	</p:column>
+			</p:dataTable>
+			</h:form>
+			
+		</h:body>
+	</ui:define>
+</ui:composition>

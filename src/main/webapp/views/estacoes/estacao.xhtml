@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template.xhtml">
+	<ui:define name="content">
+		
+		<h:form id="estacaoForm" method="post">
+    		<center>
+    			<h2>Administração de Estacoes</h2>
+    			
+    			<h:panelGrid columns="3">				
+    			
+    				<h:outputLabel value="Código * " />
+    				<h:inputText id="codigoEstacao" value="#{estacaoController.estacao.codigo}" size="45" required="true" />
+    				<h:message for="codigoEstacao" />
+    				
+    				<h:outputLabel value="Nome * " />
+    				<h:inputText id="nomeEstacao" value="#{estacaoController.estacao.nome}" size="45" required="true" />
+    				<h:message for="nomeEstacao" />
+    				
+    				<h:outputLabel value="Bacia " />
+					<p:selectOneMenu id="menuBacia" value="#{estacaoController.estacao.bacia}" >
+					    <f:converter binding="#{baciaConverter}" />
+					    <f:selectItems value="#{estacaoController.bacias}" var="bacia" itemLabel="#{bacia.nome}" />
+					</p:selectOneMenu>
+					<h:message for="menuBacia" />
+    				
+    				<h:outputLabel value="Município * " />
+    				<h:inputText id="municipio" value="#{estacaoController.estacao.municipio}" required="true"/>
+    				<h:message for="municipio" />
+    				
+    				<h:outputLabel value="Latitude * " />
+    				<h:inputText id="latitude" value="#{estacaoController.estacao.latitude}" required="true" >
+    					<f:convertNumber type="number" locale="en" minFractionDigits="5" maxFractionDigits="5" />
+    				</h:inputText>
+    				<h:message for="latitude" />
+    				
+    				<h:outputLabel value="Longitude * " />
+    				<h:inputText id="longitude" value="#{estacaoController.estacao.longitude}" required="true">
+    					<f:convertNumber type="number" locale="en" minFractionDigits="5" maxFractionDigits="5" />
+    				</h:inputText>
+    				<h:message for="longitude" />
+    				
+    				<h:outputLabel value="Altitude " />
+    				<h:inputText id="altitude" value="#{estacaoController.estacao.altitude}"  />
+    				<h:message for="altitude" />
+    				
+    				<h:outputLabel value="Tipo de estação " />
+    				<p:selectManyCheckbox id="tiposEstacao" value="#{estacaoController.tiposSelected}" converter="#{tipoEstacaoConverter}" >
+						<f:selectItems value="#{estacaoController.tiposEstacao}" var="tipo" itemLabel="#{tipo.descripcao}" />
+					</p:selectManyCheckbox>
+					<h:message for="tiposEstacao" />
+					
+					<h:outputLabel value="Entidade Responsável " />
+					<p:selectOneMenu id="menuResponsavel" value="#{estacaoController.estacao.responsavel}" >
+					    <f:selectItems value="#{estacaoController.responsaveis}" var="responsavel" itemLabel="#{responsavel.descripcao}" />
+					</p:selectOneMenu>
+					<h:message for="menuResponsavel" />
+    				
+					<h:outputLabel value="Entidade Operadora " />
+					<p:selectOneMenu id="menuOperador" value="#{estacaoController.estacao.operador}" >
+					    <f:selectItems value="#{estacaoController.operadores}" var="operador" itemLabel="#{operador.descripcao}" />
+					</p:selectOneMenu>
+					<h:message for="menuOperador" />
+					
+					<h:outputLabel value="Longitude UTM " />
+    				<h:inputText id="longitudeUtm" value="#{estacaoController.estacao.xutm}" />
+    				<h:message for="longitudeUtm" />
+    				
+    				<h:outputLabel value="Latitude UTM " />
+    				<h:inputText id="latitudeUtm" value="#{estacaoController.estacao.yutm}"  />
+    				<h:message for="latitudeUtm" />
+    				
+    				<h:outputLabel value="Coordenadas " />
+    				<h:inputText id="coordenada" value="#{estacaoController.estacao.coordenadas}"  />
+    				<h:message for="coordenada" />
+    				
+    				<h:outputLabel value="Area de Drenagem " />
+    				<h:inputText id="areaDrenagem" value="#{estacaoController.estacao.areaDrenagem}"  />
+    				<h:message for="areaDrenagem" />
+    				
+    				<h:outputLabel value="Estado " />
+					<p:selectOneMenu id="menuUf" value="#{estacaoController.estacao.uf}" >
+					    <f:selectItems value="#{estacaoController.estados}" var="estado" itemLabel="#{estado.descricao}" />
+					</p:selectOneMenu>
+					<h:message for="menuUf" />
+					
+					<h:outputLabel value="Instalada " />
+					<h:selectBooleanCheckbox id="instalada" value="#{estacaoController.estacao.instalada}" />
+					<h:message for="instalada" />
+					
+					<h:outputLabel value="Tipo Transmissão " />
+					<p:selectOneMenu id="menuTipoTransmissao" value="#{estacaoController.estacao.tipoTransmissao}" >
+					    <f:selectItems value="#{estacaoController.tiposTransmissao}" var="tipoTransmissao" itemLabel="#{tipoTransmissao.descricao}" />
+					</p:selectOneMenu>
+					<h:message for="menuTipoTransmissao" />
+					
+					<h:outputLabel value="Valor de ajuste nivel * " />
+    				<h:inputText id="valorAjuste" value="#{estacaoController.estacao.ajusteRegua}" required="true" />
+    				<h:message for="valorAjuste" />
+    				
+    				<h:outputLabel value="Código Seção Referência " />
+    				<h:inputText id="codigoSecao" value="#{estacaoController.estacao.secaoRefId}" />
+    				<h:message for="codigoSecao" />
+    				
+    			</h:panelGrid>
+    			
+    			<br />
+    			
+    			<p:commandButton value="Gravar" action="#{estacaoController.save}" update="@form" />
+				<p:commandButton value="Limpar" type="reset" />
+				<p:commandButton value="Cancelar" action="cancelAdicionarEstacao" immediate="true" />
+	    		
+    				 
+			</center>	
+    	</h:form>
+    
+    
+	
+    
+    <br />
+	<br />
+	<a href="../home.jsf">Menu Principal</a>
+		
+	</ui:define>
+</ui:composition>

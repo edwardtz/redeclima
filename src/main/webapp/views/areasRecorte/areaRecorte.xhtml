@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template.xhtml">
+	<ui:define name="content">
+		
+		<h:form id="areaRecorteForm">
+    	<center>
+    			<h2>Administração de Areas de Recorte</h2>
+    			
+    			<h:panelGrid columns="3">				
+    			
+    				<h:outputLabel value="Nome * " />
+    				<h:inputText id="nome" value="#{areaRecorteController.areaRecorte.nome}" required="true" />
+    				<h:message for="nome" styleClass="errorMessage" showDetail="true" />
+    				
+    				<h:outputLabel value="Latitude ponto Y1 * " />
+    				<h:inputText id="latitudeY1" value="#{areaRecorteController.areaRecorte.latitudeY1}" required="true" />
+    				<h:message for="latitudeY1" styleClass="errorMessage" />
+    				
+    				<h:outputLabel value="Longitude ponto X1 * " />
+    				<h:inputText id="longitudeX1" value="#{areaRecorteController.areaRecorte.longitudeX1}" required="true" />
+    				<h:message for="longitudeX1" styleClass="errorMessage" />
+    				
+    				<h:outputLabel value="Latitude ponto Y2 * " />
+    				<h:inputText id="latitudeY2" value="#{areaRecorteController.areaRecorte.latitudeY2}" required="true" />
+    				<h:message for="latitudeY2" styleClass="errorMessage" />
+    				
+    				<h:outputLabel value="Longitude ponto X2 * " />
+    				<h:inputText id="longitudeX2" value="#{areaRecorteController.areaRecorte.longitudeX2}" required="true" />
+    				<h:message for="longitudeX2" styleClass="errorMessage" />
+    				
+    			</h:panelGrid>
+    			
+    			<br />
+    			
+    			<p:commandButton value="Gravar" action="#{areaRecorteController.save}" />
+    			<p:commandButton value="Limpar" type="reset" />
+    			<p:commandButton value="Cancelar" action="cancelAdicionarAreaRecorte" immediate="true" />
+    				 
+		</center>
+    </h:form>
+	<a href="../../home.jsf">Menu Principal</a>	
+	<br />
+	<br />
+	</ui:define>
+</ui:composition>

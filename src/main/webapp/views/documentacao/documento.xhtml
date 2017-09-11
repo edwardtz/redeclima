@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template.xhtml">
+	<ui:define name="content">
+		<h:head>
+		  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		</h:head>
+		
+		<h:body>
+			<h:form id="formBacia" enctype="multipart/form-data" method="post" >
+				<center>
+				<h2>Adicionar Documento</h2>
+				
+				<h:panelGrid columns="3" >
+					
+					<h:outputLabel value="Descrição " />
+					<h:inputTextarea id="documentoDescricao" value="#{documentacaoController.documento.descricao}"  required="true" />
+					
+					<h:panelGrid id="panelLoad" columns="3" >
+						<h:outputLabel value="Documento: "/>
+						<p:fileUpload value="#{documentacaoController.docUpload}"
+						              fileUploadListener="#{documentacaoController.upload}" 
+									  mode="advanced"   
+		                  		      update="panelLoad" 
+		                  		      sizeLimit="19000000" 
+		                  		      fileLimit="1"  
+		                  		      description="Seleccionar arquivo"
+		                  		      auto="true"
+		                  		      />
+		                 <h:outputLabel id="Label1" value="Carregado" rendered="#{documentacaoController.docUpload != null}" style="color: blue" />
+		                 <h:outputLabel id="Label2" value="Sem definir" rendered="#{documentacaoController.docUpload == null}" style="color: red" />
+					 </h:panelGrid>
+				</h:panelGrid>
+				
+				<br />
+				<p:commandButton action="#{documentacaoController.salvarDoc}" value="Adicionar" />
+		    	<p:commandButton value="Cancelar" action="cancelAdicionarDoc" immediate="true" />
+			</center>
+			</h:form>
+		</h:body>
+		
+		
+		
+	</ui:define>
+</ui:composition>

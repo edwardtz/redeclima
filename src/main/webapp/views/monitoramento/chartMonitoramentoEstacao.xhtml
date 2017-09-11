@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:head>  
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		
+		<!-- ********************************** Chuvas ********************************************************* -->
+		
+		<script type="text/javascript">
+      		google.load('visualization', '1.1', {packages: ['corechart', 'controls']});
+    	</script>
+    	<script type="text/javascript" src="${facesContext.externalContext.requestContextPath}/js/relogioContador.js" />
+	    <script type="text/javascript">
+	    /*<![CDATA[*/
+	               
+	        function start() {  
+				 PF('statusDialog').show();  
+			}  
+			  
+			function stop() {  
+				 PF('statusDialog').hide();  
+			} 
+	        
+		    google.setOnLoadCallback(drawChartChuvas);
+		    google.setOnLoadCallback(drawChartNivel);
+		    google.setOnLoadCallback(drawChartVazao);
+		    
+		    function drawChartChuvas() {
+				var data = new google.visualization.DataTable();
+			    data.addColumn('datetime', 'Data');
+			    
+			    if (#{graficoMonitoramentoEstacaoController.unidadeTempo}==0){
+			    	data.addColumn('number', 'Chuva (mm 15 min)');
+			    }else{
+			    	data.addColumn('number', 'Chuva (mm hora)');
+			    }
+			    
+			    var array = #{graficoMonitoramentoEstacaoController.dataChuva};
+			    
+			    for(i in array){
+			    	var date = new Date(array[i].data);
+			 	    data.addRow([date, array[i].chuva]);
+			    }
+			    
+		        var maximoChuva = #{graficoMonitoramentoEstacaoController.maximoChuva} + 1;
+			    var minimoChuva = #{graficoMonitoramentoEstacaoController.minimoChuva} - (Math.abs(#{graficoMonitoramentoEstacaoController.maximoChuva} - #{graficoMonitoramentoEstacaoController.minimoChuva})*0.25);
+				
+		        if(minimoChuva < -1){
+		        	minimoChuva = -1;
+		        }
+
+		        var options = {
+		          legend: {'position':'top'},
+		          chartArea: {'height': '60%', 'width': '90%'},
+		          series: {0:{'color': 'blue'}},
+		          hAxis: {format: 'dd/MM HH:mm', 'textStyle':{'fontSize':10}},
+		          vAxis: {'textStyle':{'fontSize':10}, 'gridlines':{count:8}, 'viewWindow': {'min': minimoChuva, 'max': maximoChuva}} 
+		        };
+
+		        var chart = new google.visualization.LineChart(document.getElementById('chart_chuvas'));
+		        chart.draw(data, options);
+		    }
+		    
+		    function drawChartNivel() {
+				var data = new google.visualization.DataTable();
+				data.addColumn('datetime', 'Data');
+				
+				if (#{graficoMonitoramentoEstacaoController.unidadeTempo}==0){
+			    	data.addColumn('number', 'Nível (mts/15 min)');
+			    }else{
+			    	data.addColumn('number', 'Nível (mts/hora)');
+			    }
+			    
+			    var array = #{graficoMonitoramentoEstacaoController.dataNivel};
+			    
+			    for(i in array){
+			    	var date = new Date(array[i].data);
+			 	    data.addRow([date, array[i].nivel]);
+			    }
+			    
+			    var maximoNivel = #{graficoMonitoramentoEstacaoController.maximoNivel}+(#{graficoMonitoramentoEstacaoController.maximoNivel}*0.25);
+		        var minimoNivel = #{graficoMonitoramentoEstacaoController.minimoNivel};
+		        
+		        if(maximoNivel < 7){
+		        	maximoNivel = 7;
+		        }
+		        
+		        var options = {
+		          legend: {'position':'top'},
+		          chartArea: {'height': '60%', 'width': '90%'},
+		          series: {0:{'color': 'green'}},
+		          hAxis: {format: 'dd/MM HH:mm','textStyle':{'fontSize':10}},
+		          vAxis: {'textStyle':{'fontSize':10}, 'gridlines':{count:8}, 'viewWindow': {'min': -1, 'max': maximoNivel}} 
+		        };
+
+		        var chart = new google.visualization.LineChart(document.getElementById('chart_nivel'));
+		        chart.draw(data, options);
+		      }
+		    
+		    function drawChartVazao() {
+		    	var data = new google.visualization.DataTable();
+				data.addColumn('datetime', 'Data');
+				
+				if (#{graficoMonitoramentoEstacaoController.unidadeTempo}==0){
+			    	data.addColumn('number', 'Vazao (m3/s 15 min)');
+			    }else{
+			    	data.addColumn('number', 'Vazao (m3/s hora)');
+			    }
+			    
+			    var array = #{graficoMonitoramentoEstacaoController.dataVazao};
+				
+			    for(i in array){
+			    	var date = new Date(array[i].data);
+			 	    data.addRow([date, array[i].vazao]);
+			    }
+
+			    var maximoVazao = #{graficoMonitoramentoEstacaoController.maximoVazao}+(#{graficoMonitoramentoEstacaoController.maximoVazao}*0.25);
+		        var minimoVazao = #{graficoMonitoramentoEstacaoController.minimoVazao};
+		        if(maximoVazao < 7){
+		        	maximoVazao = 7;
+		        }
+		        
+		        var options = {
+		          legend: {'position':'top'},
+		          chartArea: {'height': '60%', 'width': '90%'},
+		          series: {0:{'color': 'red'}},
+		          hAxis: {format: 'dd/MM HH:mm','textStyle':{'fontSize':10}},
+		          vAxis: {'textStyle':{'fontSize':10}, 'gridlines':{count:8}, 'viewWindow': {'min': -1, 'max': maximoVazao}}  
+		        };
+
+		        var chart = new google.visualization.LineChart(document.getElementById('chart_vazao'));
+		        chart.draw(data, options);
+		      }
+
+	      /*]]>*/</script>
+	      
+	      <h:panelGrid columns="2" columnClasses="column1,column2" width="100%" >
+				<h:outputLabel styleClass="column1">Estação:  #{graficoMonitoramentoEstacaoController.estacaoActual.nome}</h:outputLabel>
+				<h:outputLabel id='timer' />
+		 </h:panelGrid> 
+		 <script type="text/javascript">window.onload = CreateTimer("timer", 300);</script>
+  	</h:head>
+  
+    <h:body>
+    	<div id="chart_chuvas" style="width: 100%; height: 30%;" />
+    	<div id="chart_nivel" style="width: 100%; height: 30%;" />
+    	<div id="chart_vazao" style="width: 100%; height: 30%;" />
+    	
+    	<div style="border-top: 1px solid #d0d0d0; margin-top: 1px; padding-top: 1px"></div>
+    	<h:form id="formGrafico">
+	    	<h:panelGrid columns="10" align="left" >
+	    		<h:outputText value="Data Inicial "  style="font-size:15px;"/>
+	           	<p:calendar value="#{graficoMonitoramentoEstacaoController.dataInicio}" id="popupDataInicialGrafico" size="10" style="font-size:12px;" />
+	           	<h:outputText value="Data Final " style="font-size:15px;" />
+	           	<p:calendar value="#{graficoMonitoramentoEstacaoController.dataFim}" id="popupDataFinalGrafico" size="10" style="font-size:12px;" />
+	         	<h:outputText value="Serie em:" style="font-size:15px;" />
+	         	<h:selectOneRadio id ="unidade" value="#{graficoMonitoramentoEstacaoController.unidadeTempo}" converter="javax.faces.Integer"  >
+					<f:selectItem itemLabel="15 minutos" itemValue="0" />
+					<f:selectItem itemLabel="horas" itemValue="1" />
+				</h:selectOneRadio>
+				<p:commandButton value="Atualizar" action="#{graficoMonitoramentoEstacaoController.mostrarDadosMonitoramento}" ajax="false" style="font-size:12px;" /> 
+	    		<p:commandButton value="Exportar" id="exportarDados" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)" style="font-size:12px;" >
+                	<p:fileDownload value="#{graficoMonitoramentoEstacaoController.file}" />
+                </p:commandButton>
+	    	</h:panelGrid>
+    	</h:form>
+  	</h:body>
+
+</ui:composition>

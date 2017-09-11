@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Imagem da Bacia #{baciaViewBean.baciaAtual.nome}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet name="css/screen.css" />
+</h:head>
+<h:body>
+	<h:panelGroup id="page" layout="block">
+		<h:panelGroup id="header" layout="block">
+			<h1>Imagem da Bacia #{baciaViewBean.baciaAtual.nome}</h1>
+		</h:panelGroup>
+		<h:panelGroup id="container" layout="block" >
+			<h:panelGroup id="sidebarSimulacaoForm" >
+				<ui:insert name="barraEsquerdaVistaBacia" />		
+			</h:panelGroup>
+			<h:panelGroup id="contentBaciaView" layout="block">
+				<ui:insert name="contentBaciaView" />
+			</h:panelGroup>
+			<h:panelGroup id="footer" layout="block" >
+				<ui:insert name="logView" />
+			</h:panelGroup>
+		</h:panelGroup>
+	</h:panelGroup>
+	
+
+</h:body>
+</html>

@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+      http://java.sun.com/xml/ns/javaee
+      http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+
+	<application>
+		<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+		<locale-config>
+		</locale-config>
+		<resource-bundle>
+			<base-name>MessageResources</base-name>
+			<var>messages</var>
+		</resource-bundle>
+	</application>
+	
+	<!-- Inicio -->
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>home</from-outcome>
+			<to-view-id>/home.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- Bacias -->
+	
+	<navigation-rule>
+		<from-view-id>/views/monitoramento/baciaView.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{monitoramentoBaciaMapController.mostrarDadosMonitoramento}</from-action>
+			<from-outcome>monitoramentoEstacaoView</from-outcome>
+			<to-view-id>/views/charts/chartMonitoramentoEstacao.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/views/monitoramento/baciaView.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{chartMonitoramentoFTPBean.mostrarDadosMonitoramento}</from-action>
+			<from-outcome>monitoramentoEstacaoViewFTP</from-outcome>
+			<to-view-id>/views/charts/chartMonitoramentoEstacaoFTP.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>listaBacias</from-outcome>
+			<to-view-id>/views/bacias/listadoBacias.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>configuracaoBacias</from-outcome>
+			<to-view-id>/views/bacias/configuracaoBacia.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>configurarRAS</from-outcome>
+			<to-view-id>/views/bacias/configuracaoRAS.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/views/bacias/listadoBacias.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>baciaFormView</from-outcome>
+			<to-view-id>/views/bacias/bacia.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>baciaFormView</from-outcome>
+			<to-view-id>/views/bacias/bacia.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/views/bacias/listadoBacias.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>modificarBacia</from-outcome>
+			<to-view-id>/views/bacias/bacia.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>baciaView</from-outcome>
+			<to-view-id>/views/monitoramento/baciaView.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>baciaMap</from-outcome>
+			<to-view-id>/views/monitoramento/monitoramentoBaciaMap.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>cancelAdicionarBacia</from-outcome>
+			<to-view-id>/views/bacias/listadoBacias.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>cancelConfigurarBacia</from-outcome>
+			<to-view-id>/views/bacias/bacia.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- Usuarios -->
+	
+	<navigation-rule>
+		<from-view-id>/views/usuarios/listadoUsuarios.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>adicionarUsuarioView</from-outcome>
+			<to-view-id>/views/usuarios/usuario.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/views/usuarios/listadoUsuarios.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>modificarUsuario</from-outcome>
+			<to-view-id>/views/usuarios/usuario.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/views/usuarios/usuario.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>cancelAdicionarUsuario</from-outcome>
+			<to-view-id>/views/usuarios/listadoUsuarios.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>listaUsuarios</from-outcome>
+			<to-view-id>/views/usuarios/listadoUsuarios.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- Estações -->
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>listaEstacoes</from-outcome>
+			<to-view-id>/views/estacoes/listadoEstacoes.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/views/estacoes/listadoEstacoes.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>estacaoFormView</from-outcome>
+			<to-view-id>/views/estacoes/estacao.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/views/estacoes/listadoEstacoes.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>estacao</from-outcome>
+			<to-view-id>/views/estacoes/estacao.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/views/estacoes/estacao.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>cancelAdicionarEstacao</from-outcome>
+			<to-view-id>/views/estacoes/listadoEstacoes.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- Grades -->
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>listaGrades</from-outcome>
+			<to-view-id>/views/grades/listadoGrades.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/views/grades/listadoGrades.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>gradeFormView</from-outcome>
+			<to-view-id>/views/grades/grade.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/views/grades/listadoGrades.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>grade</from-outcome>
+			<to-view-id>/views/grades/grade.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/views/grades/listadoGrades.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>modificarGrade</from-outcome>
+			<to-view-id>/views/grades/grade.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/views/grades/grade.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>cancelAdicionarGrade</from-outcome>
+			<to-view-id>/views/grades/listadoGrades.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- Area de Recorte -->
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>listaAreasRecorte</from-outcome>
+			<to-view-id>/views/areasRecorte/listadoAreasRecorte.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/views/areasRecorte/listadoAreasRecorte.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>areaRecorteForm</from-outcome>
+			<to-view-id>/views/areasRecorte/areaRecorte.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/views/areasRecorte/listadoAreasRecorte.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>areaRecorte</from-outcome>
+			<to-view-id>/views/areasRecorte/areaRecorte.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/views/areasRecorte/listadoAreasRecorte.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>modificarAreaRecorte</from-outcome>
+			<to-view-id>/views/areasRecorte/areaRecorte.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/views/areasRecorte/areaRecorte.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>cancelAdicionarAreaRecorte</from-outcome>
+			<to-view-id>/views/areasRecorte/listadoAreasRecorte.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- Monitoramento -->
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>monitoramentoBacia</from-outcome>
+			<to-view-id>/views/monitoramento/monitoramentoBaciaMap.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- Dados de entrada -->
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>dadosPrevisao</from-outcome>
+			<to-view-id>/views/dados/dadosPrevisao.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>verSimulacaoSerie</from-outcome>
+			<to-view-id>/views/dados/panelSimulacaoSerie.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- Panel de simulacao -->
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>panelSimulacaoPrevisao</from-outcome>
+			<to-view-id>/views/simulacao/panelSimulacaoPrevisao.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>panelSimulacaoObservada</from-outcome>
+			<to-view-id>/views/simulacao/panelSimulacaoObservada.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- Documentacao -->
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>listaDocumentos</from-outcome>
+			<to-view-id>/views/documentacao/listaDocumentacao.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>atualizardoc</from-outcome>
+			<to-view-id>/views/documentacao/documento.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>documentoForm</from-outcome>
+			<to-view-id>/views/documentacao/documento.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>cancelAdicionarDoc</from-outcome>
+			<to-view-id>/views/documentacao/listaDocumentacao.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+</faces-config>

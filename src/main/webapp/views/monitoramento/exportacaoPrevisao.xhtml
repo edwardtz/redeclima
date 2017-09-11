@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:head>  
+	    <script type="text/javascript">  
+			function start() {  
+				 PF('statusDialog').show();  
+			}  
+			  
+			function stop() {  
+				 PF('statusDialog').hide();  
+			}  
+		</script>
+  		
+  		<h4>Series de Dados de Previsão Ponto de Grade: Ponto #{exportacaoPrevisaoController.pontoGrade.id} Latitude: #{exportacaoPrevisaoController.pontoGrade.latitude} Longitude: #{exportacaoPrevisaoController.pontoGrade.longitude}</h4>
+  		
+  	</h:head>
+  
+    <h:body>
+		<center>	
+		<p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">  
+		    <p:graphicImage value="/resources/images/ajaxloadingbar.gif" />  
+		</p:dialog> 
+		
+		<p:dataTable id="dadosSeriesTable" border="1" cellpadding="1" cellspacing="1"  value="#{exportacaoPrevisaoController.series}" var="serie" 
+		             paginator="true" rows="10" style="width:70%;" >
+			<p:column sortBy="dataRodada" headerText="Data de Rodada" style="font-size:12px;">
+				<h:outputText value="#{serie.dataRodada}" style="font-size:12px;" />
+			</p:column>
+			<p:column sortBy="dataInicio" headerText="Data Inicio Serie" style="font-size:12px;" >
+				<h:outputText value="#{serie.dataInicio}" style="font-size:12px;"/>
+			</p:column>
+			<p:column  sortBy="dataFim" headerText="Data Fim Serie" style="font-size:12px;" >
+				<h:outputText value="#{serie.dataFim}" style="font-size:12px;"/>
+			</p:column>
+			<p:column style="font-size:12px;">
+               <h:form id="exportarDadosForm">
+                <p:commandLink value="Exportar Dados" id="exportarDados" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)" style="font-size:12px;" >
+                    <f:setPropertyActionListener value="#{serie}" target="#{exportacaoPrevisaoController.serieSelected}" />
+                	<p:fileDownload value="#{exportacaoPrevisaoController.file}" />
+                </p:commandLink>
+               </h:form>
+           	</p:column>
+		</p:dataTable>
+    	</center>
+  	</h:body>
+
+</ui:composition>

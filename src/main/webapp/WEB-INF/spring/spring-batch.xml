@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:batch="http://www.springframework.org/schema/batch" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/batch 
+		                   http://www.springframework.org/schema/batch/spring-batch-2.2.xsd
+						   http://www.springframework.org/schema/beans 
+						   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    
+    <!-- stored job-meta in memory --> 
+	<bean id="jobRepository" class="org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean">
+		<property name="transactionManager" ref="transactionManagerBatch" />
+	</bean>
+ 	
+	<bean id="transactionManagerBatch" class="org.springframework.batch.support.transaction.ResourcelessTransactionManager" />
+	 
+	<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+		<property name="jobRepository" ref="jobRepository" />
+	</bean>
+    
+    
+    <!-- Definicao de jobs -->
+    <job id="executarSimulacao" xmlns="http://www.springframework.org/schema/batch">
+		
+		<step id="STEP1" next="STEP2">
+			<tasklet ref="apagarArquivosTemporaisTasklet" />
+			<listeners>
+				<listener ref="progressExecutionListener"/>
+			</listeners>
+		</step>
+		<step id="STEP2" next="STEP3">
+			<tasklet ref="configurarHMSTasklet" />
+			<listeners>
+				<listener ref="progressExecutionListener"/>
+			</listeners>
+		</step>
+		<step id="STEP3" next="STEP4">
+			<tasklet ref="startHMSTasklet" />
+			<listeners>
+				<listener ref="progressExecutionListener"/>
+			</listeners>
+		</step>
+		<step id="STEP4" next="STEP5">
+			<tasklet ref="configurarRASTasklet" />
+			<listeners>
+				<listener ref="progressExecutionListener"/>
+			</listeners>
+		</step>
+		<step id="STEP5" next="STEP6">
+			<tasklet ref="startRASTasklet" />
+			<listeners>
+				<listener ref="progressExecutionListener"/>
+				<listener ref="rasExecutionListener"/>
+			</listeners>
+		</step>
+		<step id="STEP6" next="STEP7">
+			<tasklet ref="salvarResultadosRASArquivosTasklet" />
+			<listeners>
+				<listener ref="progressExecutionListener"/>
+			</listeners>
+		</step>
+		<step id="STEP7">
+			<tasklet ref="salvarResultadosRASTasklet" />
+			<listeners>
+				<listener ref="progressExecutionListener"/>
+			</listeners>
+		</step>
+		
+		<listeners>
+        	<listener ref="simulacaoExecutionListener"/>
+    	</listeners>
+		
+	</job>
+	
+	
+	<!-- Listeners do processo -->
+	<bean id="progressExecutionListener" class="com.ufpe.redeclima.task.batch.ProgressExecutionListener" scope="step" >
+	    <property name="hashParam" value="#{jobParameters['hashParam']}" />
+	</bean>
+	
+	<bean id="rasExecutionListener" class="com.ufpe.redeclima.task.batch.RasExecutionListener" scope="step" >
+		<property name="hashParam" value="#{jobParameters['hashParam']}" />
+	</bean>
+	
+	<bean id="simulacaoExecutionListener" class="com.ufpe.redeclima.task.batch.SimulacaoExecutionListener" >
+	</bean>
+	
+	<!-- Tasklet do processo -->
+	<bean id="configurarHMSTasklet" class="com.ufpe.redeclima.task.batch.ConfigurarHMSTasklet" scope="step" >
+	    <property name="hashParam" value="#{jobParameters['hashParam']}" />
+	    <!-- 50 second timeout for the command to complete -->
+	    <property name="timeout" value="50000" />
+	</bean>
+	
+	<bean id="startHMSTasklet" class="com.ufpe.redeclima.task.batch.StartHMSTasklet" scope="step" >
+	    <property name="hashParam" value="#{jobParameters['hashParam']}" />
+	    <!-- 50 second timeout for the command to complete -->
+	    <property name="timeout" value="#{parametrosSimulacao.hmsTimeOut}" />
+	</bean>
+	
+	<bean id="configurarRASTasklet" class="com.ufpe.redeclima.task.batch.ConfigurarRASTasklet" scope="step" >
+	    <property name="hashParam" value="#{jobParameters['hashParam']}" />
+	    <!-- 50 second timeout for the command to complete -->
+	    <property name="timeout" value="50000" />
+	</bean>
+	
+	<bean id="startRASTasklet" class="com.ufpe.redeclima.task.batch.StartRASTasklet" scope="step" >
+	    <property name="hashParam" value="#{jobParameters['hashParam']}" />
+	    <property name="timeout" value="#{parametrosSimulacao.rasTimeOut}" />
+	</bean>
+	
+	<bean id="salvarResultadosRASArquivosTasklet" class="com.ufpe.redeclima.task.batch.SalvarResultadosRASArquivosTasklet" scope="step" >
+	    <property name="hashParam" value="#{jobParameters['hashParam']}" />
+	    <!-- 50 second timeout for the command to complete -->
+	    <property name="timeout" value="100000" />
+	</bean>
+	
+	<bean id="salvarResultadosRASTasklet" class="com.ufpe.redeclima.task.batch.SalvarResultadosRASTasklet" scope="step" >
+	    <property name="hashParam" value="#{jobParameters['hashParam']}" />
+	</bean>
+	
+	<bean id="apagarArquivosTemporaisTasklet" class="com.ufpe.redeclima.task.batch.ApagarArquivosTemporaisTasklet" scope="step" >
+	    <property name="hashParam" value="#{jobParameters['hashParam']}" />
+	</bean>
+	
+</beans>

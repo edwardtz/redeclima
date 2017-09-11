@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template.xhtml">
+	<ui:define name="content">
+		<h:head>
+	        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	        <title>Administração de Areas de Recorte</title>
+	    </h:head>
+		<h:body>
+			<h2>Administração de Areas de Recorte</h2>
+			<h:panelGrid columns="3" align="left">
+				<h:form id="adicionarArearecorteForm">
+					<p:commandButton  value="Adicionar" action="#{areaRecorteController.adicionarAreaRecorte}" />
+				</h:form>
+			</h:panelGrid>
+			
+			<h:form>
+			<p:dataTable id="areaTable" border="1" ajax="true" cellpadding="1" cellspacing="1"  value="#{areaRecorteController.areasRecorte}" var="areaRecorte" 
+			             paginator="true" rows="15" style="width:70%;" paginatorPosition="top"
+			             emptyMessage="Não tem areas que coincidam com esse critério" filteredValue="#{areaRecorteController.areasRecorte}" widgetVar="areaTable" > 
+				
+				<p:column id="nome" headerText="Nome" sortBy="nome" filterBy="nome" filterMatchMode="contains">
+					<h:outputText value="#{areaRecorte.nome}" />
+				</p:column>
+				
+				<p:column id="latitudey1" headerText="Latitide ponto Y1">
+					<h:outputText value="#{areaRecorte.latitudeY1}"/>
+				</p:column>
+				
+				<p:column id="longitudex1" headerText="Longiude ponto X1">
+					<h:outputText value="#{areaRecorte.longitudeX1}"/>
+				</p:column>
+				
+				<p:column id="latitudey2" headerText="Latitide ponto Y2">
+					<h:outputText value="#{areaRecorte.latitudeY2}"/>
+				</p:column>
+				
+				<p:column id="longitudex2" headerText="Longiude ponto X2">
+					<h:outputText value="#{areaRecorte.longitudeX2}"/>
+				</p:column>
+				
+                <p:column>
+	                <p:commandLink id="modificarAreaRecorte" action="modificarAreaRecorte" >
+						<h:outputText value="Modificar" />
+	                    <f:setPropertyActionListener value="#{areaRecorte}" target="#{areaRecorteController.areaRecorte}" />
+	                </p:commandLink>
+            	</p:column>
+            	
+            	<p:column>
+	                <p:commandLink id="eliminarAreaRecorte" ajax="false" action="#{areaRecorteController.excluirAreaRecorte}" >
+						<h:outputText value="Eliminar" />
+	                    <f:setPropertyActionListener value="#{areaRecorte}" target="#{areaRecorteController.areaRecorte}" />
+	                </p:commandLink>
+            	</p:column>
+				
+			</p:dataTable>
+			</h:form>
+		</h:body>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:head>  
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		
+		<!-- ********************************** Chuvas ********************************************************* -->
+		
+		<script type="text/javascript">
+      		google.load('visualization', '1.1', {packages: ['corechart', 'controls']});
+    	</script>
+    	<script type="text/javascript" src="${facesContext.externalContext.requestContextPath}/js/relogioContador.js" />
+	    <script type="text/javascript">
+	    /*<![CDATA[*/
+	        
+	        function start() {  
+				 PF('statusDialog').show();  
+			}  
+			  
+			function stop() {  
+				 PF('statusDialog').hide();  
+			} 
+	        
+		    google.setOnLoadCallback(drawChartChuvas);
+		    
+		    function drawChartChuvas() {
+				var data = new google.visualization.DataTable();
+			    data.addColumn('datetime', 'Data');
+
+			    if (#{graficoPrevisaoController.unidadeTempo}==0){
+			    	data.addColumn('number', 'Chuva (mm hora)');
+			    }else{
+			    	data.addColumn('number', 'Chuva (mm dia)');
+			    }
+			    
+			    var array = #{graficoPrevisaoController.dadosChuva};
+			    
+			    for(i in array){
+			    	var date = new Date(array[i].data);
+			 	    data.addRow([date, array[i].chuva]);
+			    }
+			    
+			    var maximoChuva = #{graficoPrevisaoController.maximoChuva}+(#{graficoPrevisaoController.maximoChuva}*0.25);
+		        var minimoChuva = #{graficoPrevisaoController.minimoChuva};
+
+		        if(maximoChuva < 7){
+		        	maximoChuva = 7;
+		        }
+
+		        var options = {
+		          legend: {'position':'top'},
+		          chartArea: {'height': '60%', 'width': '90%'},
+		          series: {0:{'color': 'blue'}},
+		          hAxis: {format: 'dd/MM HH:mm', 'textStyle':{'fontSize':10}},
+		          vAxis: {'textStyle':{'fontSize':10}, 'gridlines':{count:8}, 'viewWindow': {'min': -1, 'max': maximoChuva}} 
+		        };
+
+		        var chart = new google.visualization.ColumnChart(document.getElementById('chart_chuvas'));
+		        chart.draw(data, options);
+		    }
+		    
+	      /*]]>*/</script>
+	      
+	      <h:panelGrid columns="2" columnClasses="column1,column2" width="100%" >
+				<h:outputLabel styleClass="column1">Estação: Ponto #{graficoPrevisaoController.pontoGrade.id} Latitude: #{graficoPrevisaoController.pontoGrade.latitude} Longitude: #{graficoPrevisaoController.pontoGrade.longitude}</h:outputLabel>
+				<h:outputLabel id='timer' />
+		 </h:panelGrid> 
+		 <script type="text/javascript">window.onload = CreateTimer("timer", 300);</script>
+  	</h:head>
+  
+    <h:body>
+    	<div id="chart_chuvas" style="width: 100%; height: 30%;" />
+    	
+    	<div style="border-top: 1px solid #d0d0d0; margin-top: 1px; padding-top: 1px"></div>
+    	
+    	<p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">  
+		    <p:graphicImage value="/resources/images/ajaxloadingbar.gif" />  
+		</p:dialog> 
+		
+    	<h:form id="formGrafico">
+	    	<h:panelGrid columns="9" align="left" >
+	    		 	<h:outputText value="Data Inicial " style="font-size:15px;" />
+	           		<p:calendar value="#{graficoPrevisaoController.dataInicio}" id="popupDataInicialGrafico" size="10" style="font-size:12px;"/>
+	           		<h:outputText value="Data Final " style="font-size:15px;" />
+	           		<p:calendar value="#{graficoPrevisaoController.dataFim}" id="popupDataFinalGrafico" size="10" style="font-size:12px;" />
+	         	<h:outputText value="Serie em:" style="font-size:15px;"/>
+	         	<h:selectOneRadio id ="unidade" value="#{graficoPrevisaoController.unidadeTempo}" converter="javax.faces.Integer"  >
+					<f:selectItem itemLabel="horas" itemValue="0" />
+					<f:selectItem itemLabel="dia" itemValue="1" />
+				</h:selectOneRadio>
+				<p:commandButton value="Atualizar" id="atualizarButton" ajax="false" action="#{graficoPrevisaoController.atualizarDadosPrevisao}" style="font-size:12px;" > 
+           		</p:commandButton>
+           		<p:commandButton value="Exportar" id="exportarDados" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)" style="font-size:12px;" >
+                	<p:fileDownload value="#{graficoPrevisaoController.file}" />
+                </p:commandButton>
+	    	</h:panelGrid>
+    	</h:form>
+  	</h:body>
+
+</ui:composition>

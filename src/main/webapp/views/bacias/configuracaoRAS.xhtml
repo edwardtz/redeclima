@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template.xhtml">
+	
+	<ui:define name="content">
+		
+		<h:head>
+		 	<h2>Condição Inicial Vazão</h2>
+		</h:head>
+		<h:body>
+			<h:form id="formTrechos"> 
+			
+				<p:growl id="messages" showDetail="true"/>  
+			
+				<p:dataTable var="trecho" value="#{baciaController.trechos}" id="trechosTable" editable="true" style="width:500px"  >  
+  
+			        <f:facet name="header">  
+			            Trechos dos ríos da bacia #{configuracaoBaciaController.bacia.nome}  
+			        </f:facet>  
+			  
+			        <p:ajax event="rowEdit" listener="#{baciaController.onRowEdit}" update="@this" /> 
+			  
+			        <p:column headerText="Nome Trecho" style="width:190px">  
+			               <h:outputText value="#{trecho.nome}" /> 
+			        </p:column>  
+			        
+			        <p:column headerText="Estação de Referencia" style="width:190px">  
+			            <p:cellEditor>  
+			                <f:facet name="output"><h:outputText value="#{trecho.estacaoRef.nome}" /></f:facet>  
+			                <f:facet name="input">  
+			                    <h:selectOneMenu value="#{trecho.estacaoRef}" style="width:190px" converter="#{estacaoConverter}" >  
+			                        <f:selectItems value="#{baciaController.estacoes}" var="estacao" itemLabel="#{estacao.nome}" itemValue="#{estacao}" />  
+			                    </h:selectOneMenu>  
+			                </f:facet>  
+			            </p:cellEditor>  
+			        </p:column>
+			        
+			        <p:column headerText="Vazão minima" style="width:90px">  
+			            <p:cellEditor>  
+			                <f:facet name="output"><h:outputText value="#{trecho.vazaoMinima}" /></f:facet>  
+			                <f:facet name="input">  
+			                    <h:inputText value="#{trecho.vazaoMinima}" style="width:90px" />  
+			                </f:facet>  
+			            </p:cellEditor>  
+			        </p:column>
+			        
+			        <p:column style="width:30px">  
+				        <p:rowEditor />  
+				    </p:column> 
+			  
+			    </p:dataTable>
+			
+			</h:form>
+			
+			<p:commandButton value="Voltar" action="#{baciaController.voltarConf}" immediate="true" />
+		</h:body>
+		
+	</ui:define>
+
+</ui:composition>

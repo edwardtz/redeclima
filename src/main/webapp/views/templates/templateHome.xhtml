@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Sistema de Alerta de Cheias</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet name="css/screen.css" />
+</h:head>
+<h:body>
+	<h:panelGroup id="page" layout="block">
+		<h:panelGroup id="header" layout="block">
+			<h1><a href="home.jsf">Bemvindo ao Sistema de Monitoramento e Alerta de Enchentes</a></h1>
+		</h:panelGroup>
+		<h:panelGroup id="container" layout="block">
+			<h:panelGroup id="sidebar" layout="block" >
+				<sec:authorize access="hasRole('ADMINISTRADOR') or hasRole('GESTOR') or hasRole('PESQUISADOR')">
+					<h1>Bemvindo ${loginController.usuario.login}!
+					<a href="#{request.contextPath}/j_spring_security_logout">[Sair]</a>
+					</h1>
+				</sec:authorize>
+				<h1>Barra de Menu</h1> 
+				<sec:authorize access="hasRole('ADMINISTRADOR')">
+					<h:link value="Administração de Usuarios" outcome="listaUsuarios" />
+					<br />
+					<h:link value="Administração de Bacias" outcome="listaBacias" />
+					<br />
+					<h:link value="Administração de Estacoes" outcome="listaEstacoes" />
+					<br />
+					<h:link value="Administração de Grades" outcome="listaGrades" />
+					<br />
+					<h:link value="Administração de Areas de Recorte" outcome="listaAreasRecorte" />
+					<br />
+				</sec:authorize>
+				<sec:authorize access="hasRole('ADMINISTRADOR') or hasRole('GESTOR') or hasRole('PESQUISADOR')">
+					<h:link value="Dados de Previsão" outcome="dadosPrevisao" />
+					<br />
+					<h:link value="Monitoramento" outcome="baciaMap" target="_blank" />
+					<br />
+					<h:link value="Simulação Previsão" outcome="panelSimulacaoPrevisao" target="_blank" />
+					<br />
+					<h:link value="Simulação Dados Observados" outcome="panelSimulacaoObservada" target="_blank" />
+				</sec:authorize>
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
+				<h:link value="Menu Principal" outcome="home" />
+				<sec:authorize access="not hasRole('ADMINISTRADOR') and not hasRole('GESTOR') and not hasRole('PESQUISADOR')">
+					<br />
+					<h:link value="Login" outcome="login" />
+				</sec:authorize>
+				<sec:authorize access="hasRole('ADMINISTRADOR')">
+					<br />
+					<h:link value="Documentação" outcome="listaDocumentos" />
+				</sec:authorize>
+				<sec:authorize access="hasRole('ADMINISTRADOR') or hasRole('GESTOR') or hasRole('PESQUISADOR')">
+					<br />
+					<h:form id="baixarManualForm">
+						<p:commandLink id="baixarmanual" value="Baixar Manual" ajax="false">
+							<p:fileDownload value="#{documentacaoController.manual}" />
+						</p:commandLink>
+					</h:form>
+					<a href="#{request.contextPath}/j_spring_security_logout">[Sair]</a>
+				</sec:authorize>
+			</h:panelGroup>
+			<h:panelGroup id="content" >
+				<h:graphicImage id="ufpeCapa" url="/resources/images/MAVEN_ImagemHomePage.jpg" height="80%" width="84%" />
+				<ui:insert name="content">Main Content</ui:insert>
+			</h:panelGroup>
+		</h:panelGroup>
+		<h:panelGroup id="footer" layout="block"> 
+<!-- 			#{messages.universidadeFederalDePernambuco} <a href="http://www.ufpe.br">UFPE</a> -->
+			<h:graphicImage id="ufpe" url="/resources/images/ufpe.jpg" height="50" width="80" />
+			<td />
+			<h:graphicImage id="governopernambuco" url="/resources/images/governopernambuco.jpeg" height="50" width="120" />
+			<td />
+			<td />
+			<h:graphicImage id="cprm" url="/resources/images/cprm.jpg" height="40" width="110" />
+			<td />
+			<h:graphicImage id="apac" url="/resources/images/apac.jpg" height="40" width="160" />
+			
+		</h:panelGroup>
+	</h:panelGroup>
+
+</h:body>
+</html>

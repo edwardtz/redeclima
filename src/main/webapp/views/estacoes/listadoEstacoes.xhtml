@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template.xhtml">
+	<ui:define name="content">
+		<h:head>
+	        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	        <title>Administraão de Estações</title>
+	    </h:head>
+		<h:body>
+			<h2>Administração de Estações</h2>
+			<h:panelGrid columns="3" align="left">
+				<h:form id="adicionarEstacaoForm">
+					<p:commandButton  value="Adicionar" action="#{estacaoController.adicionarEstacao}" />
+				</h:form>
+			</h:panelGrid>
+			<h:form>
+			<p:dataTable id="estacoesTable" border="1" cellpadding="1" cellspacing="1"  value="#{estacaoController.estacoes}" var="estacao" 
+			             paginator="true" rows="15" style="width:85%;" paginatorPosition="top"
+			             emptyMessage="Não tem estações que coincidam com esse critério" filteredValue="#{estacaoController.estacoes}" widgetVar="estacoesTable" >
+				
+				<p:column id="codigo" headerText="Código" sortBy="codigo" filterBy="codigo" filterMatchMode="contains">
+					<h:outputText value="#{estacao.codigo}"/>
+				</p:column>
+				<p:column id="nome" headerText="Nome" sortBy="nome" filterBy="nome" filterMatchMode="contains">
+					<h:outputText value="#{estacao.nome}"/>
+				</p:column>
+				<p:column id="longitude" headerText="Longitude" >
+					<h:outputText value="#{estacao.longitude}"> 
+						<f:convertNumber type="number" locale="en" pattern="#0.00000" />
+					</h:outputText>
+				</p:column>
+				<p:column id="latitude" headerText="Latitude" >
+					<h:outputText value="#{estacao.latitude}">
+						<f:convertNumber type="number" locale="en" pattern="#0.00000" />
+					</h:outputText>
+				</p:column>
+				<p:column id="bacia" headerText="Bacia" sortBy="bacia.nome" filterBy="bacia.nome" filterMatchMode="contains">
+					<h:outputText value="#{estacao.bacia.nome}"/>
+				</p:column>
+				<p:column id="municipio" headerText="Municipio" sortBy="municipio" filterBy="municipio" filterMatchMode="contains">
+					<h:outputText value="#{estacao.municipio}"/>
+				</p:column>
+				<p:column id="estado" headerText="Estado" sortBy="estadoEstacao" filterBy="estadoEstacao" filterMatchMode="exact" filterOptions="#{estacaoController.estadosDesc}" width="20" resizable="true">
+					<h:outputText value="#{estacao.estadoEstacao.descripcao}"/>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+					<h:outputText value="Responsavel"/>
+					</f:facet>
+					<h:outputText value="#{estacao.responsavel.descripcao}"/>
+				</p:column>
+				<p:column>
+	                <p:commandLink id="modificarEstacao" action="estacao" >
+						<h:outputText value="Modificar" />
+	                    <f:setPropertyActionListener value="#{estacao}" target="#{estacaoController.estacao}" />
+	                </p:commandLink>
+            	</p:column>
+            	<p:column>
+	                <p:commandLink id="eliminarEstacao" action="#{estacaoController.excluirEstacao}" ajax="false" >
+						<h:outputText value="Eliminar" />
+	                    <f:setPropertyActionListener value="#{estacao}" target="#{estacaoController.estacao}" />
+	                </p:commandLink>
+            	</p:column>
+			</p:dataTable>
+			</h:form>
+		</h:body>
+	</ui:define>
+</ui:composition>

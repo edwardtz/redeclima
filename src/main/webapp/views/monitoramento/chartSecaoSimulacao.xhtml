@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:head>  
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		
+		<script type="text/javascript">
+      		google.load('visualization', '1.1', {packages: ['corechart', 'controls']});
+    	</script>
+	    <script type="text/javascript">
+	    /*<![CDATA[*/
+	        
+	        function start() {  
+				 PF('statusDialog').show();  
+			}  
+			  
+			function stop() {  
+				 PF('statusDialog').hide();  
+			}
+			
+		    google.setOnLoadCallback(drawChartNivel);
+		    
+		    function drawChartNivel() {
+		    	
+		    	var data = new google.visualization.DataTable();
+			    
+				data.addColumn('datetime', 'Data');
+
+			    data.addColumn('number', 'Nivel (mts)');
+			    
+			    var array = #{graficoSecaoSimulacaoController.dadosNivel};
+			    
+			    for(i in array){
+			    	var date = new Date(array[i].data);
+			 	    data.addRow([date, array[i].nivel]);
+			    }
+			    
+			   var maximoNivel = #{graficoSecaoSimulacaoController.maximoNivel}+(Math.abs(#{graficoSecaoSimulacaoController.maximoNivel} - #{graficoSecaoSimulacaoController.minimoNivel})*0.25);
+		       var minimoNivel = #{graficoSecaoSimulacaoController.minimoNivel} - (Math.abs(#{graficoSecaoSimulacaoController.maximoNivel} - #{graficoSecaoSimulacaoController.minimoNivel})*0.25);
+		       var options = {
+		          legend: {'position':'top'},
+		          chartArea: {'height': '60%', 'width': '90%'},
+		          series: {0:{'color': 'blue'}},
+		          hAxis: {format: 'dd/MM HH:mm', 'textStyle':{'fontSize':10}},
+		          vAxis: {'textStyle':{'fontSize':10}, 'gridlines':{count:8}, 'viewWindow': {'min': minimoNivel, 'max': maximoNivel}} 
+		        };
+
+		        var chart = new google.visualization.LineChart(document.getElementById('chart_nivel'));
+		        chart.draw(data, options);
+		    }
+		    
+	      /*]]>*/</script>
+	      
+	      <h:panelGrid columns="2" columnClasses="column1,column2" width="100%" >
+				<ui:fragment rendered="#{graficoSecaoSimulacaoController.secao!=null}">
+					<h:outputLabel styleClass="column1">Rio: #{graficoSecaoSimulacaoController.secao.trecho.rio.nome} </h:outputLabel>
+					<br />
+					<h:outputLabel styleClass="column1">Trecho: #{graficoSecaoSimulacaoController.secao.trecho.nome} </h:outputLabel>
+					<br />
+					<h:outputLabel styleClass="column1">Seção: #{graficoSecaoSimulacaoController.secao.distancia} </h:outputLabel>
+				</ui:fragment>
+				
+				<ui:fragment rendered="#{graficoSecaoSimulacaoController.secao==null}">
+					<h:outputText value="No existem dados de simulação disponveis para o segmento selecionado" style="font-weight:bold" />
+				</ui:fragment>
+				
+		 </h:panelGrid> 
+  	</h:head>
+  
+    <h:body>
+    	<ui:fragment rendered="#{graficoSecaoSimulacaoController.secao!=null}">
+			<div id="chart_nivel" style="width: 100%; height: 30%;" />
+			<h:form id="exportarDados">
+			<p:commandButton value="Exportar Dados" id="exportarDados" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)" style="font-size:12px;" >
+                	<p:fileDownload value="#{graficoSecaoSimulacaoController.file}" />
+            </p:commandButton>
+            </h:form>
+		</ui:fragment>
+  	</h:body>
+
+</ui:composition>

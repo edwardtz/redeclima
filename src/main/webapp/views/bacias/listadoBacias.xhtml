@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template.xhtml">
+	<ui:define name="content">
+		<h:head>
+	        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	        <title>Administração de Bacias</title>
+<!-- 	        <link type="text/css" rel="stylesheet" href="dot-luv/skin.css"/> -->
+	    </h:head>
+		<h:body>
+			<h2>Administração de Bacias</h2>
+			<h:panelGrid columns="3" align="left">
+				<h:form id="adicionarBaciaForm">
+					<p:commandButton  value="Adicionar" action="#{baciaController.adicionarBacia}" />
+				</h:form>
+				
+			</h:panelGrid>
+			<h:form>
+			<p:dataTable id="baciaTable" border="1" cellpadding="1" cellspacing="1"  value="#{baciaController.bacias}" var="bacia"  
+			             paginator="true" rows="15" style="width:70%;" paginatorPosition="top"
+			             emptyMessage="Não tem bacias que coincidam com esse critério" filteredValue="#{baciaController.bacias}" widgetVar="baciasTable">
+				
+				<p:column id="bacia" headerText="Nome" sortBy="nome" filterBy="nome" filterMatchMode="contains" >
+					<h:outputText value="#{bacia.nome}"/>
+				</p:column>
+				<p:column headerText="Longitude X1" sortBy="longitudeX1" >
+					<h:outputText value="#{bacia.longitudeX1}">
+						<f:convertNumber type="number" locale="en" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Latitude Y1" sortBy="latitudeY1" >
+					<h:outputText value="#{bacia.latitudeY1}">
+						<f:convertNumber type="number" locale="en" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Longitude X2" sortBy="longitudeX2" >
+					<h:outputText value="#{bacia.longitudeX2}">
+						<f:convertNumber type="number" locale="en" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Latitude Y2" sortBy="latitudeY2" >
+					<h:outputText value="#{bacia.latitudeY2}">
+						<f:convertNumber type="number" locale="en" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+	                <p:commandLink id="modificarBacia" action="modificarBacia" >
+						<h:outputText value="Modificar" />
+	                    <f:setPropertyActionListener value="#{bacia}" target="#{baciaController.bacia}" />
+	                </p:commandLink>
+            	</p:column>
+            	<p:column>
+	                <p:commandLink id="eliminarBacia" action="#{baciaController.excluirBacia}" ajax="false" >
+						<h:outputText value="Eliminar" />
+	                    <f:setPropertyActionListener value="#{bacia}" target="#{baciaController.bacia}" />
+	                </p:commandLink>
+            	</p:column>
+			</p:dataTable>
+			</h:form>
+		</h:body>
+	</ui:define>
+</ui:composition>

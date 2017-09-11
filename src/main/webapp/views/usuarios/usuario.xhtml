@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template.xhtml">
+	<ui:define name="content">
+		
+		<h:form id="usuarioForm">
+    	<center>
+    			<h2>Administração de Usuários</h2>
+    			
+    			<h:panelGrid columns="3">				
+    			
+    				<h:outputLabel value="Login * " />
+    				<h:inputText id="login" value="#{usuarioController.usuario.login}" required="true" />
+    				<h:message for="login" styleClass="errorMessage" showDetail="true" />
+    				
+    				<h:outputLabel value="Senha * " />
+    				<h:inputSecret id="senha" value="#{usuarioController.usuario.password}" required="true" redisplay="true" />
+    				<h:message for="senha" styleClass="errorMessage" />
+    				
+    				<h:outputLabel value="Nome * " />
+    				<h:inputText id="nomeUsuario" value="#{usuarioController.usuario.nome}" required="true" />
+    				<h:message for="nomeUsuario" styleClass="errorMessage" />
+    				
+    				<h:outputLabel value="Sobre Nome * " />
+    				<h:inputText id="sobreNome" value="#{usuarioController.usuario.sobreNome}" required="true" />
+    				<h:message for="sobreNome" styleClass="errorMessage" />
+    				
+    				<h:outputLabel value="Email * " />
+    				<h:inputText id="emailUsuario" value="#{usuarioController.usuario.email}" required="true" validator="#{usuarioController.validateEmail}" />
+    				<h:message for="emailUsuario" styleClass="errorMessage" />
+    				
+    				<h:outputLabel value="Telefone * " />
+    				<h:inputText id="telefone" value="#{usuarioController.usuario.telefone}" required="true" />
+    				<h:message for="telefone" styleClass="errorMessage" />
+    				
+    				<h:outputLabel value="Perfil * " />
+            		<p:selectOneMenu id="umPerfil" value="#{usuarioController.usuario.perfil}" required="true" >
+                		<f:converter binding="#{perfilConverter}" />
+                		<f:selectItems value="#{usuarioController.perfiles}" var="perfil" itemLabel="#{perfil.descricao}" itemValue="#{perfil}" />
+            		</p:selectOneMenu>
+            		<h:message for="umPerfil" styleClass="errorMessage" />
+            		
+            		<h:outputLabel value="Notificar sobre  " />
+            		<p:selectManyCheckbox id="tiposNotificacaoCheck" value="#{usuarioController.tiposSelected}" converter="#{tipoNotificacaoConverter}" layout="pageDirection" >
+						<f:selectItems value="#{usuarioController.tiposNotificacao}" var="tipo" itemLabel="#{tipo.descripcao}" />
+					</p:selectManyCheckbox>
+					<h:message for="tiposNotificacaoCheck" />
+            		
+            		<h:outputLabel value="Habilitado " />
+					<h:selectBooleanCheckbox id="habilitado" value="#{usuarioController.usuario.ativo}" />
+					<h:message for="habilitado" styleClass="errorMessage" />
+            		
+    			</h:panelGrid>
+    			
+    			<br />
+    			
+	    			<p:commandButton value="Gravar" action="#{usuarioController.save}" />
+	    			<p:commandButton value="Limpar" type="reset" />
+	    			<p:commandButton value="Cancelar" action="cancelAdicionarUsuario" immediate="true" />
+    				 
+		</center>
+    </h:form>
+	<a href="../../home.jsf">Menu Principal</a>	
+	<br />
+	<br />
+	</ui:define>
+</ui:composition>

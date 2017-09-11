@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.ufpe</groupId>
+	<artifactId>redeclima</artifactId>
+	<packaging>war</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>redeclima</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jetty.version>6.1.4</jetty.version>
+		<spring.version>3.0.5.RELEASE</spring.version>
+		<spring.security.version>3.0.5.RELEASE</spring.security.version>
+		<spring.webflow.version>2.3.2.RELEASE</spring.webflow.version>
+		<spring.batch.version>2.2.1.RELEASE</spring.batch.version>
+		<spring.batch.admin.version>1.2.2.RELEASE</spring.batch.admin.version>
+		<slf4j.version>1.7.5</slf4j.version>
+		<java.version>1.5</java.version>
+		<junit.version>4.8.2</junit.version>
+		<aspectj.version>1.7.3</aspectj.version>
+		<jak.version>2.2.0-SNAPSHOT</jak.version>
+		<jsf.version>2.0</jsf.version>
+		<jsf-impl.version>2.0.2-b10</jsf-impl.version>
+		<primefaces.version>4.0</primefaces.version>
+		<jsoup.version>1.7.3</jsoup.version>
+	</properties>
+
+	<dependencies>
+
+		<!-- JSF Dependencies -->
+
+		<dependency>
+			<groupId>javax.faces</groupId>
+			<artifactId>jsf-api</artifactId>
+			<version>${jsf.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>jsf-impl</artifactId>
+			<version>${jsf-impl.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		
+		<dependency>  
+    		<groupId>org.primefaces</groupId>  
+    		<artifactId>primefaces</artifactId>  
+    		<version>${primefaces.version}</version>  
+		</dependency> 
+
+		<!-- Bean Validation Dependencies -->
+
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.0.0.GA</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>4.0.0.GA</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- JPA Persistence Dependencies -->
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>3.6.0.Final</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>1.8.0.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<version>1.0.0.Final</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- Spring Dependencies -->
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+			<exclusions>
+				<!-- Exclude Commons Logging in favor of SLF4j -->
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		
+		<!-- Spring Security -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>${spring.security.version}</version>
+		</dependency>
+ 
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring.security.version}</version>
+		</dependency>
+ 
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring.security.version}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.springframework.webflow</groupId>
+		    <artifactId>spring-webflow</artifactId>
+		    <version>${spring.webflow.version}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.springframework.webflow</groupId>
+		    <artifactId>spring-faces</artifactId>
+		    <version>${spring.webflow.version}</version>
+		</dependency>
+		
+		<!-- Spring AOP -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+ 			
+ 		<!-- Spring Batch -->
+ 		<dependency>
+ 			<groupId>org.springframework.batch</groupId>
+			<artifactId>spring-batch-core</artifactId>
+			<version>${spring.batch.version}</version>
+ 		</dependency>
+ 		
+ 		<dependency>
+ 			<groupId>org.springframework.batch</groupId>
+			<artifactId>spring-batch-infrastructure</artifactId>
+			<version>${spring.batch.version}</version>
+ 		</dependency>
+ 		
+ 		<dependency>
+ 			<groupId>org.springframework.batch</groupId>
+			<artifactId>spring-batch-admin-manager</artifactId>
+			<version>${spring.batch.admin.version}</version>
+ 		</dependency>
+ 		
+ 		<!-- Spring Batch unit test -->
+		<dependency>
+			<groupId>org.springframework.batch</groupId>
+			<artifactId>spring-batch-test</artifactId>
+			<version>${spring.batch.version}</version>
+		</dependency>
+ 		
+		<!-- AspectJ -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>${aspectj.version}</version>
+		</dependency>
+ 
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>${aspectj.version}</version>
+		</dependency>
+
+		<!-- DB Dependencies Apache Database Connection Polls -->
+
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>20030825.184428</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>commons-pool</groupId>
+			<artifactId>commons-pool</artifactId>
+			<version>20030825.183949</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		
+		<!-- Apache Commons Net library used for FTP operations -->
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.2</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
+		
+		<!-- GRIB dependencies -->
+		<dependency>
+	        <groupId>edu.ucar</groupId>
+	        <artifactId>netcdfAll</artifactId>
+	        <version>4.3</version>
+	    </dependency>
+	    
+		<!-- View Dependencies -->
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>1.1.2</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		
+		<!-- Google Charts Dependencies -->
+		<dependency>
+	         <groupId>com.googlecode.charts4j</groupId>
+	         <artifactId>charts4j</artifactId>
+	         <version>1.3</version>
+     	</dependency>
+
+		<dependency>
+			<groupId>com.googlecode.gwt-charts</groupId>
+			<artifactId>gwt-charts</artifactId>
+			<version>0.9.9</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.google.visualization</groupId>
+			<artifactId>visualization-datasource</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		
+		<!-- Google Maps Dependencies -->
+		<dependency>
+	      <groupId>de.micromata.jak</groupId>
+	      <artifactId>JavaAPIforKml</artifactId>
+	      <version>${jak.version}</version>
+	    </dependency>
+		
+		<!-- JSON Dependencies -->
+		<dependency>
+	        <groupId>net.sf.json-lib</groupId>
+	        <artifactId>json-lib</artifactId>
+	        <version>2.4</version>
+	        <classifier>jdk15</classifier>
+	    </dependency>
+	    
+	    <!-- JSOUP HTML parser library @ http://jsoup.org/ -->
+	    <dependency>
+		  <groupId>org.jsoup</groupId>
+		  <artifactId>jsoup</artifactId>
+		  <version>${jsoup.version}</version>
+		</dependency>
+	    
+		<!-- Test Dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.15</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sun.jdmk</groupId>
+					<artifactId>jmxtools</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jmx</groupId>
+					<artifactId>jmxri</artifactId>
+				</exclusion>
+			</exclusions>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.1-901.jdbc4</version>
+			<type>jar</type>
+		</dependency>
+
+	</dependencies>
+
+	<repositories>
+		
+		<!-- JBoss Repository used for Java EE 6 pieces -->
+		<repository>
+			<id>repository.jboss.org</id>
+			<name>JBoss Repository</name>
+			<url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+		</repository>
+
+		<!-- Repositorio para Spring -->
+		<repository>
+			<id>org.springframework.maven.milestone</id>
+			<name>Spring Maven Milestone Repository</name>
+			<url>http://maven.springframework.org/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		
+		<!-- Repositorio para Spring Batch Admin -->
+		<repository>
+			<id>spring-snapshots</id>
+			<name>Spring Maven Snapshot Repository</name>
+			<url>http://s3.amazonaws.com/maven.springframework.org/snapshot</url>
+		</repository>
+		
+		<!-- Repositorio para o componente de apresentação Primafaces -->
+		<repository>  
+    		<id>prime-repo</id>  
+    		<name>PrimeFaces Maven Repository</name>  
+    		<url>http://repository.primefaces.org</url>  
+    		<layout>default</layout>  
+		</repository> 
+		
+		<!-- Repositorio da unidata dos componentes para leer arquivos grib -->
+		<repository>
+          <id>unidata-releases</id>
+          <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases</url>
+      	</repository>
+      	
+      	<!-- Repositorio para adicionar jak -->
+      	<repository>
+	      <id>maven2-repository.dev.java.net</id>
+	      <name>Java.net Maven 2 Repository</name>
+	      <url>http://download.java.net/maven/2</url>
+	      <layout>default</layout>
+	      <snapshots>
+	         <enabled>true</enabled>
+	      </snapshots>
+	    </repository>
+      	
+
+	</repositories>
+
+	<build>
+		<finalName>redeclima</finalName>
+		<plugins>
+
+			<!-- Facilitates downloading source and javadoc in Eclipse -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<wtpversion>2.0</wtpversion>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+				</configuration>
+			</plugin>
+
+			<!-- Plugin to run and test through maven -->
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.25</version>
+				<configuration>
+					<connectors>
+			            <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+			              <port>9090</port>
+			            </connector>
+			          </connectors>
+					<scanIntervalSeconds>3</scanIntervalSeconds>
+				</configuration>
+			</plugin>
+
+			<!-- Ensures we are compiling at 1.6 level -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+
+			<!-- Tomcat plugin for embedded tomcat -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tomcat-maven-plugin</artifactId>
+				<version>1.1</version>
+				<configuration>
+					<port>9090</port>
+					<path>/${project.build.finalName}</path>
+				</configuration>
+			</plugin>
+
+			<plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>aspectj-maven-plugin</artifactId>
+            <version>1.0</version>
+            <dependencies>
+                <dependency>
+                    <groupId>org.aspectj</groupId>
+                    <artifactId>aspectjrt</artifactId>
+                    <version>1.6.11</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.aspectj</groupId>
+                    <artifactId>aspectjtools</artifactId>
+                    <version>1.6.11</version>
+                </dependency>
+            </dependencies>
+            <executions>
+               <execution>
+                    <goals>
+                        <goal>aspectj-report</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <outxml>true</outxml>
+                <verbose>true</verbose>
+                <showWeaveInfo>true</showWeaveInfo>
+                <aspectLibraries>
+                    <aspectLibrary>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-aspects</artifactId>
+                    </aspectLibrary>
+                </aspectLibraries>
+                <source>1.6</source>
+                <target>1.6</target>
+            </configuration>
+        </plugin>
+
+		</plugins>
+	</build>
+</project>

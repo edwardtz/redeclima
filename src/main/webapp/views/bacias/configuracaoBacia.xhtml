@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template.xhtml">
+	<ui:define name="content">
+		
+		<h:form id="formBacia" enctype="multipart/form-data" method="post" >
+			<center>
+			<h2>Configuração da Bacia #{baciaController.bacia.nome}</h2>
+			
+    		<p:growl id="messages" showDetail="true"/> 
+    		
+    		<h:panelGrid columns="3" id="panelLoad" >
+				
+				<h:outputLabel value="Arquivo Rios: "/>
+				<p:fileUpload value="#{baciaController.file}"
+				              fileUploadListener="#{baciaController.upload}" 
+							  mode="advanced"   
+                  		      update="messages, panelLoad" 
+                  		      sizeLimit="19000000" 
+                  		      fileLimit="3"  
+                  		      allowTypes="/(\.|\/)(kml)$/"
+                  		      description="Seleccionar arquivo KML de Rios"
+                  		      auto="true"
+                  		      />
+                 <h:outputLabel value="Configurado" rendered="#{baciaController.bacia.configRios}" style="color: blue" />
+                 <h:outputLabel value="Sem definir" rendered="#{!baciaController.bacia.configRios}" style="color: red" />
+                  		      
+				
+				<h:outputLabel value="Arquivo Seções: " />
+				<p:fileUpload value="#{baciaController.fileSecoes}"
+				              fileUploadListener="#{baciaController.uploadSecoes}" 
+							  mode="advanced"   
+                  		      update="messages, panelLoad" 
+                  		      sizeLimit="19000000" 
+                  		      fileLimit="3"  
+                  		      allowTypes="/(\.|\/)(kml)$/"
+                  		      auto="true"
+                  		      />
+                <h:outputLabel value="Configurado" rendered="#{baciaController.bacia.configSecoes}" style="color: blue" />
+				<h:outputLabel value="Sem definir" rendered="#{!baciaController.bacia.configSecoes}" style="color: red" />  
+                  		      
+                <h:outputLabel value="Modelo HMS: " />
+				<p:fileUpload value="#{baciaController.fileHms}"
+				              fileUploadListener="#{baciaController.uploadHms}" 
+							  mode="advanced"   
+                  		      update="messages, panelLoad" 
+                  		      sizeLimit="19000000" 
+                  		      fileLimit="3"  
+                  		      allowTypes="/(\.|\/)(zip)$/"
+                  		      auto="true"
+                  		      /> 
+                <h:outputLabel value="Configurado" rendered="#{baciaController.bacia.configHms}" style="color: blue" />
+				<h:outputLabel value="Sem definir" rendered="#{!baciaController.bacia.configHms}" style="color: red" />
+                
+                <h:outputLabel value="Modelo RAS: " />
+				<p:fileUpload value="#{baciaController.fileRas}"
+				              fileUploadListener="#{baciaController.uploadRas}" 
+							  mode="advanced"   
+                  		      update="messages, panelLoad" 
+                  		      sizeLimit="59000000" 
+                  		      fileLimit="3"  
+                  		      allowTypes="/(\.|\/)(zip)$/"
+                  		      auto="true"
+                  		      />
+				<h:commandLink value="Configurar" rendered="#{baciaController.bacia.configRas}" action="configurarRAS" />
+				<h:outputLabel value="Sem definir" rendered="#{!baciaController.bacia.configRas}" style="color: red" />
+				
+    		</h:panelGrid>
+    		
+    		<br />
+    		
+			<p:commandButton action="#{baciaController.finalizarConfiguracao}" value="Finalizar" />
+<!-- 			<p:commandButton value="Limpar" type="reset" /> -->
+	    	<p:commandButton value="Cancelar" action="cancelConfigurarBacia" immediate="true" />
+		
+		</center>
+		</h:form>
+		
+	</ui:define>
+</ui:composition>
